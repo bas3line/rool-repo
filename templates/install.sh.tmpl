@@ -1,0 +1,9 @@
+#!/bin/sh
+# Replace TOOL_NAME, BINARY_NAME, and the release artifact convention.
+# Serve the completed script as /TOOL_NAME/install.sh.
+set -eu
+
+BASE_URL=${TOOLS_BASE_URL:-https://tools.yshubham.com}
+VERSION=${TOOL_VERSION:-v0.1.0}
+# Add OS/architecture detection, download, checksum verification, extraction,
+# and installation here. Keep artifacts under /TOOL_NAME/releases/$VERSION/.
