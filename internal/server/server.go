@@ -31,6 +31,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+	if r.URL.Path == "/" {
+		s.serveLanding(w, r)
+		return
+	}
 	if r.URL.Path == "/watchman/install.sh" {
 		s.serveInstaller(w, r)
 		return
@@ -65,6 +69,20 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.logger.Info("asset served", "method", r.Method, "path", clean, "bytes", info.Size())
+	http.ServeFile(w, r, filename)
+}
+
+func (s *Server) serveLanding(w http.ResponseWriter, r *http.Request) {
+	filename := filepath.Join(s.root, "index.html")
+	info, err := os.Stat(filename)
+	if err != nil || !info.Mode().IsRegular() {
+		http.NotFound(w, r)
+		return
+	}
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	s.logger.Info("registry landing served", "method", r.Method, "bytes", info.Size())
 	http.ServeFile(w, r, filename)
 }
 

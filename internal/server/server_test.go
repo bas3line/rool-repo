@@ -10,6 +10,31 @@ import (
 	"testing"
 )
 
+func TestServesRegistryLandingPage(t *testing.T) {
+	root := t.TempDir()
+	const landing = "<!doctype html><title>tools</title><main>agent skills and MCP servers</main>"
+	if err := os.WriteFile(filepath.Join(root, "index.html"), []byte(landing), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := New(root, filepath.Join(t.TempDir(), "install.sh"), slog.New(slog.NewTextHandler(io.Discard, nil)))
+	for _, method := range []string{http.MethodGet, http.MethodHead} {
+		recorder := httptest.NewRecorder()
+		server.ServeHTTP(recorder, httptest.NewRequest(method, "/", nil))
+		if recorder.Code != http.StatusOK {
+			t.Fatalf("method %s status = %d", method, recorder.Code)
+		}
+		if got := recorder.Header().Get("Content-Type"); got != "text/html; charset=utf-8" {
+			t.Fatalf("content type = %q", got)
+		}
+		if got := recorder.Header().Get("Cache-Control"); got != "no-cache" {
+			t.Fatalf("cache control = %q", got)
+		}
+		if method == http.MethodGet && recorder.Body.String() != landing {
+			t.Fatalf("body = %q", recorder.Body.String())
+		}
+	}
+}
+
 func TestServesPackagedInstallerWithSafeHeaders(t *testing.T) {
 	installer := filepath.Join(t.TempDir(), "install.sh")
 	if err := os.WriteFile(installer, []byte("#!/bin/sh\n"), 0o644); err != nil {

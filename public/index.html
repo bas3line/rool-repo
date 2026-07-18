@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A small registry for production inference tools, agent skills, and MCP servers.">
+    <meta name="theme-color" content="#181818">
+    <meta name="color-scheme" content="dark">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;550;650&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+    <title>tools — inference utility registry</title>
+    <style>
+      :root {
+        --background: #181818;
+        --surface: #1e1e1e;
+        --surface-raised: #242424;
+        --surface-hover: #2c2c2c;
+        --text: #f4f4f4;
+        --muted: #9a9a9a;
+        --subtle: #6f6f6f;
+        --line: rgb(255 255 255 / 0.085);
+        --line-strong: rgb(255 255 255 / 0.15);
+        --green: #70d68b;
+        --amber: #d6b76f;
+        --font: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        color-scheme: dark;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        background: var(--background);
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 14.5px;
+        letter-spacing: -0.02em;
+        line-height: 1.58;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      ::selection {
+        background: #f4f4f4;
+        color: #181818;
+      }
+
+      .shell {
+        width: min(100% - 3rem, 47rem);
+        margin: 0 auto;
+        padding: 4.2rem 0 3rem;
+      }
+
+      .topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 4.4rem;
+        animation: enter 420ms ease both;
+      }
+
+      .wordmark {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.58rem;
+        font-family: var(--mono);
+        font-size: 0.82rem;
+        letter-spacing: -0.035em;
+      }
+
+      .prompt-mark {
+        color: var(--subtle);
+      }
+
+      .registry-state,
+      .chip,
+      .kind,
+      .version {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 6px;
+        background: var(--surface-raised);
+        color: var(--muted);
+        font-size: 0.78rem;
+        line-height: 1.65;
+      }
+
+      .registry-state {
+        gap: 0.4rem;
+        padding: 0.08rem 0.52rem;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 0 3px rgb(112 214 139 / 0.08);
+      }
+
+      .hero {
+        max-width: 43rem;
+        animation: enter 500ms 60ms ease both;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 11ch;
+        margin-bottom: 1rem;
+        font-size: clamp(3rem, 10vw, 5.7rem);
+        font-weight: 650;
+        letter-spacing: -0.09em;
+        line-height: 0.88;
+      }
+
+      .hero-copy {
+        max-width: 39rem;
+        margin-bottom: 1.15rem;
+        color: var(--muted);
+        font-size: 1.05rem;
+        letter-spacing: -0.03em;
+        line-height: 1.55;
+      }
+
+      .counts,
+      .chips,
+      .entry-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.38rem;
+      }
+
+      .chip {
+        gap: 0.3rem;
+        padding: 0.03rem 0.46rem;
+      }
+
+      .chip strong {
+        color: var(--text);
+        font-weight: 550;
+      }
+
+      .jump-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem 1rem;
+        margin: 2.6rem 0 0;
+        padding: 1rem 0;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        list-style: none;
+      }
+
+      .jump-links a,
+      .text-link {
+        color: var(--muted);
+        transition: color 150ms ease;
+      }
+
+      .jump-links a::before {
+        content: "#";
+        margin-right: 0.18rem;
+        color: var(--subtle);
+      }
+
+      .jump-links a:hover,
+      .text-link:hover {
+        color: var(--text);
+      }
+
+      .section {
+        scroll-margin-top: 2rem;
+        margin-top: 4.8rem;
+        animation: enter 520ms ease both;
+      }
+
+      .section:nth-of-type(2) {
+        animation-delay: 110ms;
+      }
+
+      .section:nth-of-type(3) {
+        animation-delay: 160ms;
+      }
+
+      .section:nth-of-type(4) {
+        animation-delay: 210ms;
+      }
+
+      .section-heading {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: baseline;
+        gap: 0.8rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .section-heading h2 {
+        margin: 0;
+        font-family: var(--mono);
+        font-size: 0.86rem;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        text-transform: lowercase;
+      }
+
+      .section-rule {
+        height: 1px;
+        background: var(--line);
+      }
+
+      .section-count {
+        color: var(--subtle);
+        font-family: var(--mono);
+        font-size: 0.72rem;
+      }
+
+      .entry {
+        padding: 1.45rem 0 1.55rem;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .entry:first-of-type {
+        border-top: 1px solid var(--line);
+      }
+
+      .entry-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .entry-title-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .entry h3 {
+        margin: 0;
+        font-size: 1.18rem;
+        font-weight: 550;
+        letter-spacing: -0.045em;
+        line-height: 1.25;
+      }
+
+      .kind,
+      .version {
+        padding: 0.01rem 0.42rem;
+        font-family: var(--mono);
+        font-size: 0.67rem;
+      }
+
+      .version {
+        color: var(--green);
+      }
+
+      .entry-description {
+        max-width: 39rem;
+        margin: 0.68rem 0 0;
+        color: var(--muted);
+      }
+
+      .chips {
+        margin-top: 0.85rem;
+      }
+
+      .chips .chip {
+        background: rgb(255 255 255 / 0.045);
+        font-size: 0.72rem;
+      }
+
+      .command-wrap {
+        position: relative;
+        margin-top: 1.15rem;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #101010;
+        box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.035);
+      }
+
+      .command-label {
+        padding: 0.56rem 0.8rem;
+        border-bottom: 1px solid var(--line);
+        color: var(--subtle);
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        letter-spacing: 0;
+      }
+
+      pre {
+        margin: 0;
+        overflow-x: auto;
+        padding: 0.86rem 3.8rem 0.9rem 0.9rem;
+        color: rgb(244 244 244 / 0.9);
+        font-family: var(--mono);
+        font-size: 0.79rem;
+        letter-spacing: -0.025em;
+        line-height: 1.6;
+        scrollbar-width: thin;
+      }
+
+      code {
+        font-family: inherit;
+      }
+
+      .copy-button {
+        position: absolute;
+        right: 0.58rem;
+        bottom: 0.58rem;
+        display: inline-flex;
+        min-width: 2.7rem;
+        min-height: 1.7rem;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--surface-raised);
+        color: var(--muted);
+        cursor: pointer;
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        transition: background 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease;
+      }
+
+      .copy-button:hover {
+        border-color: var(--line-strong);
+        background: var(--surface-hover);
+        color: var(--text);
+        transform: translateY(-1px);
+      }
+
+      .copy-button[data-copied="true"] {
+        color: var(--green);
+      }
+
+      .entry-links {
+        margin-top: 0.9rem;
+        align-items: center;
+      }
+
+      .entry-links a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.18rem;
+        border-radius: 6px;
+        background: var(--surface-raised);
+        padding: 0.03rem 0.46rem;
+        color: var(--muted);
+        font-size: 0.76rem;
+        line-height: 1.65;
+        transition: background 150ms ease, color 150ms ease;
+      }
+
+      .entry-links a::after {
+        content: "↗";
+        color: var(--subtle);
+        font-size: 0.86em;
+      }
+
+      .entry-links a:hover {
+        background: var(--surface-hover);
+        color: var(--text);
+      }
+
+      .empty-entry {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.85rem;
+        padding: 1.2rem 0;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .empty-symbol {
+        color: var(--subtle);
+        font-family: var(--mono);
+      }
+
+      .empty-entry p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .empty-entry strong {
+        display: block;
+        margin-bottom: 0.12rem;
+        color: var(--text);
+        font-weight: 550;
+      }
+
+      .endpoint-list {
+        margin: 0;
+        padding: 0;
+        border-top: 1px solid var(--line);
+        list-style: none;
+      }
+
+      .endpoint-list li {
+        display: grid;
+        grid-template-columns: minmax(11rem, 0.75fr) 1fr;
+        gap: 1rem;
+        padding: 0.72rem 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .endpoint-list code {
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 0.76rem;
+      }
+
+      .endpoint-list span {
+        color: var(--muted);
+      }
+
+      .footer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-top: 5.5rem;
+        padding-top: 1.1rem;
+        border-top: 1px solid var(--line);
+        color: var(--subtle);
+        font-size: 0.78rem;
+      }
+
+      .footer a:hover {
+        color: var(--text);
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--text);
+        outline-offset: 3px;
+      }
+
+      @keyframes enter {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 560px) {
+        .shell {
+          width: min(100% - 2rem, 47rem);
+          padding-top: 2rem;
+        }
+
+        .topline {
+          margin-bottom: 3.25rem;
+        }
+
+        h1 {
+          font-size: clamp(3.2rem, 20vw, 4.8rem);
+        }
+
+        .section {
+          margin-top: 4rem;
+        }
+
+        .entry-header {
+          display: block;
+        }
+
+        .endpoint-list li {
+          grid-template-columns: 1fr;
+          gap: 0.15rem;
+        }
+
+        pre {
+          padding-right: 0.9rem;
+          padding-bottom: 3.05rem;
+          font-size: 0.74rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topline">
+        <a class="wordmark" href="/" aria-label="tools registry home">
+          <span class="prompt-mark" aria-hidden="true">~/</span>
+          <span>tools.yshubham.com</span>
+        </a>
+        <span class="registry-state"><span class="status-dot" aria-hidden="true"></span>registry online</span>
+      </header>
+
+      <section class="hero" aria-labelledby="page-title">
+        <h1 id="page-title">tools.</h1>
+        <p class="hero-copy">a small, inspectable registry for production inference utilities, agent skills, and MCP servers. copy a command, install the thing, get back to operating.</p>
+        <div class="counts" aria-label="registry counts">
+          <span class="chip"><strong>1</strong> tool</span>
+          <span class="chip"><strong>1</strong> skill</span>
+          <span class="chip"><strong>0</strong> mcp</span>
+        </div>
+        <nav aria-label="registry sections">
+          <ul class="jump-links">
+            <li><a href="#tools">tools</a></li>
+            <li><a href="#skills">skills</a></li>
+            <li><a href="#mcp">mcp</a></li>
+            <li><a href="#endpoints">endpoints</a></li>
+          </ul>
+        </nav>
+      </section>
+
+      <section class="section" id="tools" aria-labelledby="tools-heading">
+        <div class="section-heading">
+          <h2 id="tools-heading">tools</h2>
+          <span class="section-rule" aria-hidden="true"></span>
+          <span class="section-count">01 published</span>
+        </div>
+
+        <article class="entry">
+          <div class="entry-header">
+            <div class="entry-title-row">
+              <h3>Watchman</h3>
+              <span class="kind">cli</span>
+              <span class="version">v0.8.0</span>
+            </div>
+            <span class="registry-state"><span class="status-dot" aria-hidden="true"></span>stable</span>
+          </div>
+          <p class="entry-description">An open-source Rust utility for monitoring, debugging, benchmarking, and safely operating GPU inference servers.</p>
+          <div class="chips" aria-label="supported Watchman platforms">
+            <span class="chip">macOS · x86-64</span>
+            <span class="chip">macOS · ARM64</span>
+            <span class="chip">Linux · x86-64</span>
+            <span class="chip">Linux · ARM64</span>
+          </div>
+          <div class="command-wrap">
+            <div class="command-label"># install watchman</div>
+            <pre><code>curl -fsSL https://tools.yshubham.com/watchman/install.sh | sh</code></pre>
+            <button class="copy-button" type="button" data-copy="curl -fsSL https://tools.yshubham.com/watchman/install.sh | sh" aria-label="Copy Watchman install command">copy</button>
+          </div>
+          <div class="entry-links">
+            <a href="https://github.com/bas3line/gpu-watchman" target="_blank" rel="noreferrer">source</a>
+            <a href="/watchman/install.sh">installer</a>
+          </div>
+        </article>
+      </section>
+
+      <section class="section" id="skills" aria-labelledby="skills-heading">
+        <div class="section-heading">
+          <h2 id="skills-heading">agent skills</h2>
+          <span class="section-rule" aria-hidden="true"></span>
+          <span class="section-count">01 published</span>
+        </div>
+
+        <article class="entry">
+          <div class="entry-header">
+            <div class="entry-title-row">
+              <h3>watchman</h3>
+              <span class="kind">SKILL.md</span>
+            </div>
+            <span class="registry-state"><span class="status-dot" aria-hidden="true"></span>agent: *</span>
+          </div>
+          <p class="entry-description">Teaches compatible coding agents the complete Watchman workflow: GPU incident response, runtime telemetry, capacity planning, canaries, saturation benchmarks, regression gates, history, and rollout validation.</p>
+          <div class="command-wrap">
+            <div class="command-label"># install globally for supported agents</div>
+            <pre><code>npx skills add bas3line/rool-repo \
+  --skill watchman --agent '*' --global --yes</code></pre>
+            <button class="copy-button" type="button" data-copy="npx skills add bas3line/rool-repo --skill watchman --agent '*' --global --yes" aria-label="Copy Watchman skill install command">copy</button>
+          </div>
+          <div class="entry-links">
+            <a href="/skills">raw instructions</a>
+            <a href="https://github.com/bas3line/rool-repo/tree/main/skills/watchman" target="_blank" rel="noreferrer">skill source</a>
+          </div>
+        </article>
+      </section>
+
+      <section class="section" id="mcp" aria-labelledby="mcp-heading">
+        <div class="section-heading">
+          <h2 id="mcp-heading">mcp servers</h2>
+          <span class="section-rule" aria-hidden="true"></span>
+          <span class="section-count">00 published</span>
+        </div>
+        <div class="empty-entry">
+          <span class="empty-symbol" aria-hidden="true">[ ]</span>
+          <p><strong>no MCP server published yet.</strong>When one ships, this registry will show its transport, authentication scope, client configuration, and exact launch command here.</p>
+        </div>
+      </section>
+
+      <section class="section" id="endpoints" aria-labelledby="endpoints-heading">
+        <div class="section-heading">
+          <h2 id="endpoints-heading">registry endpoints</h2>
+          <span class="section-rule" aria-hidden="true"></span>
+          <span class="section-count">plain + inspectable</span>
+        </div>
+        <ul class="endpoint-list">
+          <li><code>/watchman/install.sh</code><span>checksum-verifying CLI installer</span></li>
+          <li><code>/skills</code><span>plain-text agent installation instructions</span></li>
+          <li><code>/healthz</code><span>registry liveness probe</span></li>
+        </ul>
+      </section>
+
+      <footer class="footer">
+        <span>built for inference engineers.</span>
+        <a href="https://yshubham.com" target="_blank" rel="noreferrer">yshubham.com ↗</a>
+      </footer>
+    </main>
+
+    <script>
+      const copyButtons = document.querySelectorAll("[data-copy]");
+
+      copyButtons.forEach((button) => {
+        button.addEventListener("click", async () => {
+          const command = button.dataset.copy;
+          try {
+            await navigator.clipboard.writeText(command);
+          } catch {
+            const textarea = document.createElement("textarea");
+            textarea.value = command;
+            textarea.setAttribute("readonly", "");
+            textarea.style.position = "fixed";
+            textarea.style.opacity = "0";
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            textarea.remove();
+          }
+
+          button.textContent = "copied";
+          button.dataset.copied = "true";
+          window.setTimeout(() => {
+            button.textContent = "copy";
+            button.dataset.copied = "false";
+          }, 1600);
+        });
+      });
+    </script>
+  </body>
+</html>
