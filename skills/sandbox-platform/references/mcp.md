@@ -3,12 +3,25 @@
 ## Setup
 
 ```sh
+curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh
 export SANDBOX_URL=https://sandbox.example.com
 export SANDBOX_TOKEN='read-from-your-secret-store'
-codex mcp add sandbox -- sandbox-mcp
 ```
 
-`sandbox-mcp` is a local stdio bridge. It connects to the public controller API and does not need worker, database, Docker, or NATS access.
+The setup script installs the skill for supported agents and registers `sandbox-mcp` with detected Codex, Claude Code, and Gemini CLIs. Manual commands are:
+
+```sh
+codex mcp add sandbox -- sandbox-mcp
+claude mcp add --scope user --transport stdio sandbox -- sandbox-mcp
+gemini mcp add sandbox sandbox-mcp --scope user
+opencode mcp add
+code --add-mcp '{"name":"sandbox","type":"stdio","command":"sandbox-mcp"}'
+goose session --with-extension "sandbox-mcp"
+```
+
+Cursor, Claude Desktop, Windsurf, Cline, Roo Code, and Gemini Code Assist use the shared `mcpServers` JSON envelope. OpenCode, VS Code, and Goose have native formats. Fetch verified templates and config locations from `https://tools.yshubham.com/sandbox/clients/index.md`.
+
+Pi, Aider, CommandCode, and hosts without native MCP use the `sandbox` CLI with this skill. `sandbox-mcp` is a local stdio bridge. It connects to the public controller API and does not need worker, database, Docker, or NATS access. Never place `SANDBOX_TOKEN` in a committed client config.
 
 ## Tools
 

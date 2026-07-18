@@ -4,7 +4,7 @@ The source behind [tools.yshubham.com](https://tools.yshubham.com): a tiny Go fi
 
 ## Sandbox in one command
 
-Install `sandbox`, `sandboxd`, `sandbox-mcp`, the `sandbox-platform` skill, and register the local MCP server with Codex when Codex is present:
+Install `sandbox`, `sandboxd`, `sandbox-mcp`, the `sandbox-platform` skill across supported agents, and register the local MCP server with detected Codex, Claude Code, and Gemini CLIs:
 
 ```sh
 curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh
@@ -27,11 +27,11 @@ export SANDBOX_TOKEN='read-from-your-secret-store'
 sandbox doctor
 ```
 
-The setup script is idempotent around Codex configuration: it leaves an existing `sandbox` MCP entry unchanged. Skip optional parts with:
+The setup script leaves existing `sandbox` entries unchanged. It also publishes verified templates for OpenCode, Cursor, VS Code/Copilot, Windsurf, Cline, Roo Code, Goose, Claude Desktop, Gemini Code Assist, and generic MCP hosts. Skip optional parts with:
 
 ```sh
 curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh -s -- --no-skill
-curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh -s -- --no-codex-mcp
+curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh -s -- --no-mcp
 ```
 
 ## Agent skills
@@ -61,7 +61,9 @@ curl -fsSL https://tools.yshubham.com/skills
 
 ```sh
 codex mcp add sandbox -- sandbox-mcp
-curl -fsSL https://tools.yshubham.com/sandbox/mcp.json
+claude mcp add --scope user --transport stdio sandbox -- sandbox-mcp
+gemini mcp add sandbox sandbox-mcp --scope user
+curl -fsSL https://tools.yshubham.com/sandbox/clients/index.md
 ```
 
 Keep `SANDBOX_TOKEN` in the environment or client secret store. Do not bake it into this repository or a shared MCP config.
@@ -74,8 +76,9 @@ public/
   skills.txt                    # curl-friendly skill commands
   sandbox/
     install.sh                  # checksum-verifying binary installer
-    setup.sh                    # binaries + skill + Codex MCP
+    setup.sh                    # binaries + skill + detected MCP CLIs
     mcp.json                    # generic client template
+    clients/                    # verified configs for major MCP hosts
     latest                      # current immutable release pointer
     releases/vX.Y.Z/            # archives and .sha256 files
   watchman/releases/vX.Y.Z/     # archives and .sha256 files

@@ -1,0 +1,9 @@
+extensions:
+  sandbox:
+    name: Sandbox
+    cmd: sandbox-mcp
+    args: []
+    enabled: true
+    envs: {}
+    type: stdio
+    timeout: 900

@@ -149,6 +149,42 @@ func TestServesSetupScriptsWithoutCaching(t *testing.T) {
 	}
 }
 
+func TestServesMCPClientTemplatesWithoutCaching(t *testing.T) {
+	root := t.TempDir()
+	clientsDir := filepath.Join(root, "sandbox", "clients")
+	if err := os.MkdirAll(clientsDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	files := map[string]string{
+		"opencode.json": "application/json; charset=utf-8",
+		"goose.yaml":    "application/yaml; charset=utf-8",
+		"index.md":      "text/markdown; charset=utf-8",
+	}
+	for name := range files {
+		if err := os.WriteFile(filepath.Join(clientsDir, name), []byte("template\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	server := New(root, filepath.Join(t.TempDir(), "install.sh"), slog.New(slog.NewTextHandler(io.Discard, nil)))
+	for name, contentType := range files {
+		recorder := httptest.NewRecorder()
+		server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/sandbox/clients/"+name, nil))
+		if recorder.Code != http.StatusOK {
+			t.Fatalf("template %q status = %d", name, recorder.Code)
+		}
+		if got := recorder.Header().Get("Content-Type"); got != contentType {
+			t.Fatalf("template %q content type = %q", name, got)
+		}
+		if got := recorder.Header().Get("Cache-Control"); got != "no-cache" {
+			t.Fatalf("template %q cache control = %q", name, got)
+		}
+		if got := recorder.Header().Get("X-Content-Type-Options"); got != "nosniff" {
+			t.Fatalf("template %q x-content-type-options = %q", name, got)
+		}
+	}
+}
+
 func TestRejectsDirectoriesAndWriteMethods(t *testing.T) {
 	server := New(t.TempDir(), filepath.Join(t.TempDir(), "install.sh"), slog.New(slog.NewTextHandler(io.Discard, nil)))
 	for _, request := range []*http.Request{

@@ -322,6 +322,72 @@
         font-size: 0.69rem;
       }
 
+      .client-roster {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.38rem;
+        margin-top: 1rem;
+      }
+
+      .client-roster span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.34rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.18rem 0.55rem;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 0.67rem;
+        letter-spacing: -0.02em;
+      }
+
+      .client-roster span::before {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--green);
+        content: "";
+      }
+
+      .client-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.55rem;
+        margin-top: 1.15rem;
+      }
+
+      .client-grid .command-wrap {
+        min-width: 0;
+        margin-top: 0;
+        border-radius: 9px;
+      }
+
+      .client-grid .command-label {
+        color: var(--green);
+      }
+
+      .client-grid pre {
+        min-height: 4.45rem;
+        padding-top: 0.68rem;
+        font-size: 0.7rem;
+        line-height: 1.48;
+      }
+
+      .client-config-note {
+        margin: 0.65rem 0 0;
+        padding: 0.68rem 0.8rem;
+        border-left: 2px solid var(--amber);
+        background: rgb(214 183 111 / 0.045);
+        color: var(--muted);
+        font-size: 0.77rem;
+      }
+
+      .client-config-note strong {
+        color: var(--text);
+        font-weight: 550;
+      }
+
       .command-wrap {
         position: relative;
         margin-top: 1.15rem;
@@ -532,6 +598,10 @@
           gap: 0.08rem;
         }
 
+        .client-grid {
+          grid-template-columns: 1fr;
+        }
+
         pre {
           padding-right: 0.9rem;
           padding-bottom: 3.05rem;
@@ -613,7 +683,7 @@
             <p><code>agents</code><span>Codex · Claude Code · OpenCode · Pi · Aider · Goose · CommandCode</span></p>
           </div>
           <div class="command-wrap">
-            <div class="command-label"># one command: binaries + skill + codex mcp</div>
+            <div class="command-label"># one command: binaries + cross-agent skill + detected mcp clients</div>
             <pre><code>curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh</code></pre>
             <button class="copy-button" type="button" data-copy="curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh" aria-label="Copy Sandbox setup command">copy</button>
           </div>
@@ -725,12 +795,27 @@
             </div>
             <span class="registry-state"><span class="status-dot" aria-hidden="true"></span>local bridge</span>
           </div>
-          <p class="entry-description">Connects Codex and other MCP clients to a self-hosted Sandbox controller. Ships 10 typed lifecycle tools, three capability resources, two workflow prompts, structured results, tool annotations, and explicit error semantics.</p>
+          <p class="entry-description">Connects every major MCP-capable coding agent to a self-hosted Sandbox controller. The same Rust stdio bridge works in terminal agents, editor agents, desktop clients, and any generic MCP host.</p>
           <div class="chips" aria-label="Sandbox MCP capabilities">
             <span class="chip">10 tools</span>
             <span class="chip">3 resources</span>
             <span class="chip">2 prompts</span>
             <span class="chip">SANDBOX_TOKEN</span>
+          </div>
+          <div class="client-roster" aria-label="Supported Sandbox MCP clients">
+            <span>Codex</span>
+            <span>Claude Code</span>
+            <span>Claude Desktop</span>
+            <span>OpenCode</span>
+            <span>Cursor</span>
+            <span>VS Code</span>
+            <span>Gemini CLI</span>
+            <span>Gemini Code Assist</span>
+            <span>Windsurf</span>
+            <span>Cline</span>
+            <span>Roo Code</span>
+            <span>Goose</span>
+            <span>generic MCP</span>
           </div>
           <div class="capability-lines" aria-label="Sandbox MCP surface">
             <p><code>lifecycle</code><span>health · create · exec · list · inspect · delete</span></p>
@@ -739,14 +824,51 @@
             <p><code>context</code><span>capabilities · agent catalog · lifecycle workflow · task prompts</span></p>
             <p><code>protocol</code><span>closed JSON schemas · annotations · structuredContent · isError</span></p>
           </div>
-          <div class="command-wrap">
-            <div class="command-label"># register the installed stdio server with codex</div>
-            <pre><code>codex mcp add sandbox -- sandbox-mcp</code></pre>
-            <button class="copy-button" type="button" data-copy="codex mcp add sandbox -- sandbox-mcp" aria-label="Copy Sandbox MCP registration command">copy</button>
+          <div class="client-grid" aria-label="MCP client setup commands">
+            <div class="command-wrap">
+              <div class="command-label">codex</div>
+              <pre><code>codex mcp add sandbox -- sandbox-mcp</code></pre>
+              <button class="copy-button" type="button" data-copy="codex mcp add sandbox -- sandbox-mcp" aria-label="Copy Codex MCP registration command">copy</button>
+            </div>
+            <div class="command-wrap">
+              <div class="command-label">claude code</div>
+              <pre><code>claude mcp add --scope user \
+  --transport stdio sandbox -- sandbox-mcp</code></pre>
+              <button class="copy-button" type="button" data-copy="claude mcp add --scope user --transport stdio sandbox -- sandbox-mcp" aria-label="Copy Claude Code MCP registration command">copy</button>
+            </div>
+            <div class="command-wrap">
+              <div class="command-label">gemini cli</div>
+              <pre><code>gemini mcp add sandbox sandbox-mcp \
+  --scope user</code></pre>
+              <button class="copy-button" type="button" data-copy="gemini mcp add sandbox sandbox-mcp --scope user" aria-label="Copy Gemini CLI MCP registration command">copy</button>
+            </div>
+            <div class="command-wrap">
+              <div class="command-label">opencode</div>
+              <pre><code>opencode mcp add
+# choose local → sandbox-mcp</code></pre>
+              <button class="copy-button" type="button" data-copy="opencode mcp add" aria-label="Copy OpenCode MCP setup command">copy</button>
+            </div>
+            <div class="command-wrap">
+              <div class="command-label">vs code / copilot</div>
+              <pre><code>code --add-mcp '{"name":"sandbox",
+  "type":"stdio","command":"sandbox-mcp"}'</code></pre>
+              <button class="copy-button" type="button" data-copy="code --add-mcp '{&quot;name&quot;:&quot;sandbox&quot;,&quot;type&quot;:&quot;stdio&quot;,&quot;command&quot;:&quot;sandbox-mcp&quot;}'" aria-label="Copy VS Code MCP registration command">copy</button>
+            </div>
+            <div class="command-wrap">
+              <div class="command-label">goose session</div>
+              <pre><code>goose session --with-extension \
+  "sandbox-mcp"</code></pre>
+              <button class="copy-button" type="button" data-copy="goose session --with-extension &quot;sandbox-mcp&quot;" aria-label="Copy Goose MCP session command">copy</button>
+            </div>
           </div>
+          <p class="client-config-note"><strong>Cursor · Windsurf · Cline · Roo Code · Claude Desktop</strong> use the shared <code>mcpServers</code> template. OpenCode, VS Code, and Goose get native-format templates too. Pi, Aider, and CommandCode use the same Sandbox CLI + installed skill when their host has no native MCP client.</p>
           <div class="entry-links">
-            <a href="/sandbox/mcp.json">client template</a>
-            <a href="/sandbox/setup.sh">automatic setup</a>
+            <a href="/sandbox/clients/index.md">all client setup</a>
+            <a href="/sandbox/clients/mcp-servers.json">shared json</a>
+            <a href="/sandbox/clients/opencode.json">opencode json</a>
+            <a href="/sandbox/clients/vscode.json">vs code json</a>
+            <a href="/sandbox/clients/goose.yaml">goose yaml</a>
+            <a href="/sandbox/setup.sh">automatic cli setup</a>
             <a href="https://github.com/bas3line/rool-repo/tree/main/skills/sandbox-platform/references/mcp.md" target="_blank" rel="noreferrer">agent guide</a>
           </div>
         </article>
@@ -759,9 +881,10 @@
           <span class="section-count">plain + inspectable</span>
         </div>
         <ul class="endpoint-list">
-          <li><code>/sandbox/setup.sh</code><span>one-command binaries + skill + Codex MCP setup</span></li>
+          <li><code>/sandbox/setup.sh</code><span>one-command binaries + cross-agent skill + detected MCP CLI setup</span></li>
           <li><code>/sandbox/install.sh</code><span>checksum-verifying Sandbox binary installer</span></li>
           <li><code>/sandbox/mcp.json</code><span>generic MCP client configuration template</span></li>
+          <li><code>/sandbox/clients/index.md</code><span>Codex, Claude, OpenCode, Cursor, VS Code, Gemini, Windsurf, Cline, Roo, and Goose setup</span></li>
           <li><code>/sandbox/latest</code><span>current immutable Sandbox release pointer</span></li>
           <li><code>/docs/watchman/</code><span>human and agent-ready Watchman documentation</span></li>
           <li><code>/watchman/install.sh</code><span>checksum-verifying CLI installer</span></li>
