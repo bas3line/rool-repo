@@ -137,6 +137,44 @@ func TestServesSandboxDocumentationForHumansAndAgents(t *testing.T) {
 	}
 }
 
+func TestServesSharedFrontendAssetsWithoutCaching(t *testing.T) {
+	root := t.TempDir()
+	assets := map[string]string{
+		"theme.css":     "text/css; charset=utf-8",
+		"tools.css":     "text/css; charset=utf-8",
+		"tools.js":      "text/javascript; charset=utf-8",
+		"docs/docs.css": "text/css; charset=utf-8",
+		"docs/docs.js":  "text/javascript; charset=utf-8",
+	}
+	for name := range assets {
+		filename := filepath.Join(root, filepath.FromSlash(name))
+		if err := os.MkdirAll(filepath.Dir(filename), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filename, []byte("asset\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	server := New(root, filepath.Join(t.TempDir(), "install.sh"), slog.New(slog.NewTextHandler(io.Discard, nil)))
+	for name, contentType := range assets {
+		recorder := httptest.NewRecorder()
+		server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/"+name, nil))
+		if recorder.Code != http.StatusOK {
+			t.Fatalf("asset %q status = %d", name, recorder.Code)
+		}
+		if got := recorder.Header().Get("Content-Type"); got != contentType {
+			t.Fatalf("asset %q content type = %q", name, got)
+		}
+		if got := recorder.Header().Get("Cache-Control"); got != "no-cache" {
+			t.Fatalf("asset %q cache control = %q", name, got)
+		}
+		if got := recorder.Header().Get("X-Content-Type-Options"); got != "nosniff" {
+			t.Fatalf("asset %q x-content-type-options = %q", name, got)
+		}
+	}
+}
+
 func TestServesPackagedInstallerWithSafeHeaders(t *testing.T) {
 	installer := filepath.Join(t.TempDir(), "install.sh")
 	if err := os.WriteFile(installer, []byte("#!/bin/sh\n"), 0o644); err != nil {
