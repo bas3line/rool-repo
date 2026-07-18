@@ -1,0 +1,38 @@
+# Sandbox
+
+> Self-hosted Rust control plane for disposable coding environments and coding-agent workloads. These Markdown files are the canonical machine-readable documentation for Sandbox v0.1.0.
+
+## Start here
+
+- [Agent documentation index](https://tools.yshubham.com/docs/sandbox/index.md): install, safe lifecycle, reference routing, MCP surface, and security invariants
+- [Product overview](https://tools.yshubham.com/docs/sandbox/overview.md): capabilities, status, architecture summary, repository map, and project intent
+- [Human documentation portal](https://tools.yshubham.com/docs/sandbox/): rendered Markdown-style documentation and reference navigation
+
+## Core concepts
+
+- [Architecture](https://tools.yshubham.com/docs/sandbox/architecture.md): controller, worker, state store, message bus, trust boundaries, and lifecycle flow
+- [AEGIS scheduler](https://tools.yshubham.com/docs/sandbox/aegis.md): risk scoring, isolation floor, hard filters, ranking, and deterministic placement
+- [Security model](https://tools.yshubham.com/docs/sandbox/security.md): supported claims, Docker boundary, external runtime requirements, and threat controls
+- [External runtime protocol](https://tools.yshubham.com/docs/sandbox/runtime-driver.md): JSON protocol for Firecracker, Kata, gVisor, and custom VMM drivers
+
+## Interfaces
+
+- [CLI reference](https://tools.yshubham.com/docs/sandbox/cli.md): doctor, create, exec, list, inspect, wait, delete, agents, and MCP config
+- [MCP reference](https://tools.yshubham.com/docs/sandbox/mcp.md): 10 tools, three resources, two prompts, client setup, and result handling
+- [HTTP API](https://tools.yshubham.com/docs/sandbox/api.md): operator and worker endpoints, authentication, idempotency, and bounded execution
+- [Coding agents](https://tools.yshubham.com/docs/sandbox/agents.md): Codex, Claude Code, OpenCode, Pi, Aider, Goose, and CommandCode profiles
+
+## Operate and deploy
+
+- [Configuration](https://tools.yshubham.com/docs/sandbox/configuration.md): server, store, bus, policy, node, observability, and environment overrides
+- [Deployment](https://tools.yshubham.com/docs/sandbox/deployment.md): Compose, systemd, Kubernetes, reverse proxy, release verification, and scaling
+- [Operations runbook](https://tools.yshubham.com/docs/sandbox/operations.md): health, common incidents, metrics, backups, upgrades, and capacity drills
+- [Development](https://tools.yshubham.com/docs/sandbox/development.md): Rust toolchain, tests, quality checks, and repository layout
+- [Roadmap](https://tools.yshubham.com/docs/sandbox/roadmap.md): explicit production gates and capabilities that are not implemented in v0.1
+- [Security reporting](https://tools.yshubham.com/docs/sandbox/reporting.md): private vulnerability reporting scope and process
+
+## Installation and agent integration
+
+- [One-command setup](https://tools.yshubham.com/sandbox/setup.sh): binaries, cross-agent skill, and detected MCP CLI registration
+- [MCP client templates](https://tools.yshubham.com/sandbox/clients/index.md): Codex, Claude, OpenCode, Cursor, VS Code, Gemini, Windsurf, Cline, Roo, Goose, and generic clients
+- [Sandbox skill](https://github.com/bas3line/rool-repo/tree/main/skills/sandbox-platform): agent lifecycle, safety, CLI, MCP, and incident handling instructions

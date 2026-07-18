@@ -24,6 +24,8 @@ Prefer MCP when tools are connected. Use the CLI for operator terminals, scripts
 
 Read [references/mcp.md](references/mcp.md) for the complete 10-tool map, resources, prompts, and client setup. Read [references/cli.md](references/cli.md) for exact commands and flags.
 
+For broader product, architecture, deployment, API, security, or operations questions, start at `https://tools.yshubham.com/docs/sandbox/index.md`. Fetch only the narrow raw Markdown reference needed for the task; `https://tools.yshubham.com/docs/sandbox/llms.txt` lists every canonical document.
+
 ## Classify before creating
 
 - Mark external or user-controlled repositories as untrusted.
