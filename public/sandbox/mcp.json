@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sandbox": {
+      "command": "/absolute/path/to/sandbox-mcp",
+      "env": {
+        "SANDBOX_URL": "https://sandbox.example.com",
+        "SANDBOX_TOKEN": "use-your-client-secret-store"
+      }
+    }
+  }
+}

@@ -1,3 +1,20 @@
+SANDBOX
+
+Full workstation setup (binaries, skill, and Codex MCP registration):
+
+  curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh
+
+Install only the Sandbox skill globally into every supported agent:
+
+  npx skills add bas3line/rool-repo --skill sandbox-platform --agent '*' --global --yes
+
+Inspect all skills before installing:
+
+  npx skills add bas3line/rool-repo --list
+
+Skill source: https://github.com/bas3line/rool-repo/tree/main/skills/sandbox-platform
+
+
 WATCHMAN
 
 Install the CLI:
@@ -20,5 +37,4 @@ Update an installed skill:
 CLI source:   https://github.com/bas3line/gpu-watchman
 Skill source: https://github.com/bas3line/rool-repo/tree/main/skills/watchman
 
-The repository is currently private, so skill installation requires GitHub access.
 The hosted CLI and complete agent skill both target Rust Watchman v0.8.0.
