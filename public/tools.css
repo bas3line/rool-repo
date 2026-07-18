@@ -1,0 +1,466 @@
+.shell {
+  width: min(100%, 52rem);
+  margin: 0 auto;
+  padding: 2.4rem 1.4rem 5rem;
+}
+
+.topline,
+.entry-header,
+.section-heading,
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.topline {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0;
+}
+
+.wordmark,
+.footer a {
+  color: var(--muted);
+  transition: color 160ms ease;
+}
+
+.wordmark:hover,
+.footer a:hover {
+  color: var(--text);
+}
+
+.prompt-mark {
+  color: var(--subtle);
+}
+
+.registry-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.status-dot {
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 0.2rem rgb(112 214 139 / 0.08);
+}
+
+.hero {
+  margin-top: 6.8rem;
+}
+
+.hero::before {
+  content: "SELF-HOSTED ENGINEERING REGISTRY";
+  display: block;
+  margin-bottom: 1.1rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+.hero h1 {
+  max-width: 8ch;
+  margin: 0;
+  font-size: clamp(3.75rem, 11vw, 6rem);
+  font-weight: 500;
+  letter-spacing: -0.085em;
+  line-height: 0.82;
+}
+
+.hero-copy {
+  max-width: 37rem;
+  margin: 2rem 0 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  line-height: 1.55;
+}
+
+.counts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 4.8rem;
+  border-block: 1px solid var(--line);
+}
+
+.counts .chip {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 1.1rem 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.counts .chip + .chip {
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--line);
+}
+
+.counts strong {
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1.65rem;
+  font-weight: 500;
+  letter-spacing: -0.06em;
+}
+
+.jump-links,
+.entry-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0;
+  list-style: none;
+}
+
+.jump-links {
+  margin: 1rem 0 0;
+}
+
+.jump-links a,
+.entry-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.7rem;
+  padding: 0.12rem 0.55rem;
+  border-radius: 0.42rem;
+  background: var(--surface-raised);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.67rem;
+  letter-spacing: 0;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.jump-links a:hover,
+.entry-links a:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.section {
+  margin-top: 6.6rem;
+  counter-reset: registry-entry;
+}
+
+.section-heading {
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font: inherit;
+  color: var(--text);
+}
+
+.section-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.section-count {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 4.4rem minmax(0, 1fr);
+  padding: 2rem 0 3.6rem;
+  border-bottom: 1px solid var(--line);
+  counter-increment: registry-entry;
+}
+
+.entry::before {
+  content: "0" counter(registry-entry);
+  grid-column: 1;
+  grid-row: 1 / span 20;
+  padding-top: 0.6rem;
+  color: var(--subtle);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0;
+}
+
+.entry > * {
+  grid-column: 2;
+}
+
+.entry-header {
+  align-items: flex-start;
+}
+
+.entry-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.65rem;
+}
+
+.entry h3 {
+  width: 100%;
+  margin: 0 0 0.15rem;
+  font-size: clamp(2.4rem, 7vw, 3.65rem);
+  font-weight: 500;
+  letter-spacing: -0.075em;
+  line-height: 0.94;
+}
+
+.kind,
+.version {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.version {
+  color: var(--text);
+}
+
+.entry-description {
+  max-width: 42rem;
+  margin: 1.6rem 0 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.chips,
+.client-roster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38rem 0.8rem;
+  margin-top: 1.2rem;
+}
+
+.entry .chip,
+.client-roster span {
+  color: var(--subtle);
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0;
+}
+
+.entry .chip::before,
+.client-roster span::before {
+  content: "#";
+  color: var(--muted);
+}
+
+.capability-lines {
+  margin-top: 1.6rem;
+  border-top: 1px solid var(--line);
+}
+
+.capability-lines p {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  margin: 0;
+  padding: 0.72rem 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.capability-lines code {
+  color: var(--text);
+  font-size: 0.7rem;
+}
+
+.command-wrap,
+.command {
+  position: relative;
+  margin-top: 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: 0.7rem;
+  background: var(--code-background);
+}
+
+.command-label,
+.code-label {
+  padding: 0.62rem 4.7rem 0.58rem 0.85rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--subtle);
+  font-family: var(--mono);
+  font-size: 0.61rem;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.command-wrap pre,
+.command pre {
+  margin: 0;
+  padding: 0.95rem 5.2rem 1rem 0.85rem;
+  overflow-x: auto;
+  color: var(--text);
+  font-size: 0.72rem;
+  line-height: 1.65;
+  letter-spacing: -0.02em;
+}
+
+.copy-button {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  min-width: 3.7rem;
+  padding: 0.28rem 0.48rem;
+  border: 0;
+  border-radius: 0.35rem;
+  background: var(--surface-raised);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.61rem;
+  letter-spacing: 0;
+  cursor: pointer;
+}
+
+.copy-button:hover,
+.copy-button[data-copied="true"] {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.entry-links {
+  margin: 1.15rem 0 0;
+}
+
+.client-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+
+.client-grid .command-wrap {
+  margin-top: 0;
+}
+
+.client-grid pre {
+  min-height: 4.3rem;
+}
+
+.client-config-note {
+  margin: 1.4rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.65;
+}
+
+.client-config-note strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.client-config-note code {
+  padding: 0.12rem 0.3rem;
+  border-radius: 0.3rem;
+  background: var(--surface-raised);
+  color: var(--text);
+  font-size: 0.72rem;
+}
+
+.endpoint-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.endpoint-list li {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.8fr) minmax(0, 1.7fr);
+  gap: 1.25rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.77rem;
+}
+
+.endpoint-list code {
+  color: var(--text);
+  font-size: 0.68rem;
+  overflow-wrap: anywhere;
+}
+
+.footer {
+  margin-top: 7rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+  color: var(--subtle);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0;
+}
+
+.footer a {
+  font-family: var(--font);
+  font-size: clamp(2rem, 7vw, 3.2rem);
+  font-weight: 500;
+  letter-spacing: -0.075em;
+}
+
+@media (max-width: 680px) {
+  .shell {
+    padding-inline: 1rem;
+  }
+
+  .hero {
+    margin-top: 5rem;
+  }
+
+  .counts .chip {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .entry {
+    grid-template-columns: 2.3rem minmax(0, 1fr);
+  }
+
+  .entry-header,
+  .footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .entry-header > .registry-state {
+    margin-top: 0.7rem;
+  }
+
+  .client-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .capability-lines p,
+  .endpoint-list li {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .command-wrap pre,
+  .command pre {
+    padding-right: 1rem;
+  }
+}

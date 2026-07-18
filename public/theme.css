@@ -1,0 +1,86 @@
+:root {
+  --background: #181818;
+  --surface: #1e1e1e;
+  --surface-raised: #242424;
+  --surface-hover: #2d2d2d;
+  --code-background: #101010;
+  --text: #f4f4f4;
+  --muted: #9a9a9a;
+  --subtle: #747474;
+  --line: rgb(255 255 255 / 0.09);
+  --line-strong: rgb(255 255 255 / 0.16);
+  --green: #70d68b;
+  --amber: #d6b76f;
+  --red: #e1877f;
+  --font: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14.4px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.56;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+code,
+pre {
+  font-family: var(--mono);
+}
+
+::selection {
+  background: var(--text);
+  color: var(--background);
+}
+
+:focus-visible {
+  outline: 1px solid var(--text);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

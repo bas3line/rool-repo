@@ -94,6 +94,14 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
+	} else if strings.HasSuffix(clean, ".css") {
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Header().Set("Content-Type", "text/css; charset=utf-8")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+	} else if strings.HasSuffix(clean, ".js") {
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Header().Set("Content-Type", "text/javascript; charset=utf-8")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
 	} else if contentType := mime.TypeByExtension(filepath.Ext(filename)); contentType != "" {
 		w.Header().Set("Content-Type", contentType)
 	}
