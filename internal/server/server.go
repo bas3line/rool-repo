@@ -46,7 +46,11 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.URL.Path == "/docs/watchman" || r.URL.Path == "/docs/watchman/" {
-		s.serveWatchmanDocs(w, r)
+		s.serveDocsIndex(w, r, "watchman")
+		return
+	}
+	if r.URL.Path == "/docs/sandbox" || r.URL.Path == "/docs/sandbox/" {
+		s.serveDocsIndex(w, r, "sandbox")
 		return
 	}
 
@@ -86,6 +90,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Content-Type", "text/markdown; charset=utf-8")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
+	} else if strings.HasSuffix(clean, ".txt") {
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
 	} else if contentType := mime.TypeByExtension(filepath.Ext(filename)); contentType != "" {
 		w.Header().Set("Content-Type", contentType)
 	}
@@ -108,8 +116,8 @@ func (s *Server) serveLanding(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, filename)
 }
 
-func (s *Server) serveWatchmanDocs(w http.ResponseWriter, r *http.Request) {
-	filename := filepath.Join(s.root, "docs", "watchman", "index.html")
+func (s *Server) serveDocsIndex(w http.ResponseWriter, r *http.Request, product string) {
+	filename := filepath.Join(s.root, "docs", product, "index.html")
 	info, err := os.Stat(filename)
 	if err != nil || !info.Mode().IsRegular() {
 		http.NotFound(w, r)
@@ -118,7 +126,7 @@ func (s *Server) serveWatchmanDocs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
-	s.logger.Info("watchman docs served", "method", r.Method, "bytes", info.Size())
+	s.logger.Info("documentation served", "method", r.Method, "product", product, "bytes", info.Size())
 	http.ServeFile(w, r, filename)
 }
 

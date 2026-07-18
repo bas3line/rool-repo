@@ -81,6 +81,62 @@ func TestServesWatchmanDocumentation(t *testing.T) {
 	}
 }
 
+func TestServesSandboxDocumentationForHumansAndAgents(t *testing.T) {
+	root := t.TempDir()
+	docsDir := filepath.Join(root, "docs", "sandbox")
+	if err := os.MkdirAll(docsDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	files := map[string]struct {
+		body        string
+		contentType string
+	}{
+		"index.html": {body: "<!doctype html><title>Sandbox docs</title>", contentType: "text/html; charset=utf-8"},
+		"index.md":   {body: "# Sandbox documentation\n", contentType: "text/markdown; charset=utf-8"},
+		"llms.txt":   {body: "# Sandbox\n", contentType: "text/plain; charset=utf-8"},
+	}
+	for name, file := range files {
+		if err := os.WriteFile(filepath.Join(docsDir, name), []byte(file.body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	server := New(root, filepath.Join(t.TempDir(), "install.sh"), slog.New(slog.NewTextHandler(io.Discard, nil)))
+	for _, route := range []string{"/docs/sandbox", "/docs/sandbox/"} {
+		recorder := httptest.NewRecorder()
+		server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, route, nil))
+		if recorder.Code != http.StatusOK {
+			t.Fatalf("route %q status = %d", route, recorder.Code)
+		}
+		if got := recorder.Header().Get("Content-Type"); got != files["index.html"].contentType {
+			t.Fatalf("route %q content type = %q", route, got)
+		}
+		if recorder.Body.String() != files["index.html"].body {
+			t.Fatalf("route %q body = %q", route, recorder.Body.String())
+		}
+	}
+
+	for _, name := range []string{"index.md", "llms.txt"} {
+		recorder := httptest.NewRecorder()
+		server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/docs/sandbox/"+name, nil))
+		if recorder.Code != http.StatusOK {
+			t.Fatalf("file %q status = %d", name, recorder.Code)
+		}
+		if got := recorder.Header().Get("Content-Type"); got != files[name].contentType {
+			t.Fatalf("file %q content type = %q", name, got)
+		}
+		if got := recorder.Header().Get("Cache-Control"); got != "no-cache" {
+			t.Fatalf("file %q cache control = %q", name, got)
+		}
+		if got := recorder.Header().Get("X-Content-Type-Options"); got != "nosniff" {
+			t.Fatalf("file %q x-content-type-options = %q", name, got)
+		}
+		if recorder.Body.String() != files[name].body {
+			t.Fatalf("file %q body = %q", name, recorder.Body.String())
+		}
+	}
+}
+
 func TestServesPackagedInstallerWithSafeHeaders(t *testing.T) {
 	installer := filepath.Join(t.TempDir(), "install.sh")
 	if err := os.WriteFile(installer, []byte("#!/bin/sh\n"), 0o644); err != nil {

@@ -30,6 +30,7 @@ jobs:
           sh -n public/sandbox/setup.sh
           sh -n scripts/test-sandbox-installer.sh
           sh -n scripts/test-sandbox-setup.sh
+          sh -n scripts/test-sandbox-docs.sh
           sh -n scripts/testdata/mock-curl.sh
           sh -n scripts/testdata/mock-npx.sh
           sh -n scripts/testdata/mock-codex.sh
@@ -39,3 +40,4 @@ jobs:
         run: |
           sh scripts/test-sandbox-installer.sh
           sh scripts/test-sandbox-setup.sh
+          sh scripts/test-sandbox-docs.sh

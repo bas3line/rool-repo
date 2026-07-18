@@ -2,6 +2,14 @@
 
 The source behind [tools.yshubham.com](https://tools.yshubham.com): a tiny Go file host for checksum-verified binaries, one-command workstation setup, MCP configuration, and cross-agent skills.
 
+Sandbox documentation is published for both humans and agents:
+
+```text
+https://tools.yshubham.com/docs/sandbox/
+https://tools.yshubham.com/docs/sandbox/index.md
+https://tools.yshubham.com/docs/sandbox/llms.txt
+```
+
 ## Sandbox in one command
 
 Install `sandbox`, `sandboxd`, `sandbox-mcp`, the `sandbox-platform` skill across supported agents, and register the local MCP server with detected Codex, Claude Code, and Gemini CLIs:
@@ -81,6 +89,7 @@ public/
     clients/                    # verified configs for major MCP hosts
     latest                      # current immutable release pointer
     releases/vX.Y.Z/            # archives and .sha256 files
+  docs/sandbox/                 # themed portal + raw Markdown + llms.txt
   watchman/releases/vX.Y.Z/     # archives and .sha256 files
 skills/
   sandbox-platform/             # complete Sandbox agent skill
