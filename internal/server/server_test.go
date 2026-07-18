@@ -35,6 +35,52 @@ func TestServesRegistryLandingPage(t *testing.T) {
 	}
 }
 
+func TestServesWatchmanDocumentation(t *testing.T) {
+	root := t.TempDir()
+	docsDir := filepath.Join(root, "docs", "watchman")
+	if err := os.MkdirAll(docsDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	const rendered = "<!doctype html><title>Watchman docs</title>"
+	const markdown = "# Watchman documentation\n"
+	if err := os.WriteFile(filepath.Join(docsDir, "index.html"), []byte(rendered), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(docsDir, "reference.md"), []byte(markdown), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := New(root, filepath.Join(t.TempDir(), "install.sh"), slog.New(slog.NewTextHandler(io.Discard, nil)))
+
+	for _, route := range []string{"/docs/watchman", "/docs/watchman/"} {
+		recorder := httptest.NewRecorder()
+		server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, route, nil))
+		if recorder.Code != http.StatusOK {
+			t.Fatalf("route %q status = %d", route, recorder.Code)
+		}
+		if got := recorder.Header().Get("Content-Type"); got != "text/html; charset=utf-8" {
+			t.Fatalf("route %q content type = %q", route, got)
+		}
+		if recorder.Body.String() != rendered {
+			t.Fatalf("route %q body = %q", route, recorder.Body.String())
+		}
+	}
+
+	recorder := httptest.NewRecorder()
+	server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/docs/watchman/reference.md", nil))
+	if recorder.Code != http.StatusOK {
+		t.Fatalf("markdown status = %d", recorder.Code)
+	}
+	if got := recorder.Header().Get("Content-Type"); got != "text/markdown; charset=utf-8" {
+		t.Fatalf("markdown content type = %q", got)
+	}
+	if got := recorder.Header().Get("Cache-Control"); got != "no-cache" {
+		t.Fatalf("markdown cache control = %q", got)
+	}
+	if recorder.Body.String() != markdown {
+		t.Fatalf("markdown body = %q", recorder.Body.String())
+	}
+}
+
 func TestServesPackagedInstallerWithSafeHeaders(t *testing.T) {
 	installer := filepath.Join(t.TempDir(), "install.sh")
 	if err := os.WriteFile(installer, []byte("#!/bin/sh\n"), 0o644); err != nil {
