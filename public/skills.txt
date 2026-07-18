@@ -21,5 +21,4 @@ CLI source:   https://github.com/bas3line/gpu-watchman
 Skill source: https://github.com/bas3line/rool-repo/tree/main/skills/watchman
 
 The repository is currently private, so skill installation requires GitHub access.
-The complete skill targets Rust Watchman v0.8.0 or newer. The hosted binary
-channel remains v0.2.0 until v0.8.0 release archives are published.
+The hosted CLI and complete agent skill both target Rust Watchman v0.8.0.

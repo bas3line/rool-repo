@@ -7,8 +7,8 @@ Standalone Go service for serving Watchman installation, versioned release artif
 ```text
 https://tools.yshubham.com/watchman/install.sh
 https://tools.yshubham.com/skills
-https://tools.yshubham.com/watchman/releases/v0.2.0/gpu-watchman_linux_amd64.tar.gz
-https://tools.yshubham.com/watchman/releases/v0.2.0/gpu-watchman_linux_amd64.tar.gz.sha256
+https://tools.yshubham.com/watchman/releases/v0.8.0/gpu-watchman_linux_amd64.tar.gz
+https://tools.yshubham.com/watchman/releases/v0.8.0/gpu-watchman_linux_amd64.tar.gz.sha256
 ```
 
 The container packages this repository's canonical `install.sh` and serves it without a runtime GitHub dependency. Release archives retain the internal `gpu-watchman` member for compatibility; the installer verifies and installs it as the public `watchman` command. The `skills/watchman/` package follows the Agent Skills `SKILL.md` convention, and `/skills` returns only plain-text install commands.
@@ -26,7 +26,7 @@ Install the Watchman skill globally into every agent supported by the Skills CLI
 npx skills add bas3line/rool-repo --skill watchman --agent '*' --global --yes
 ```
 
-Review `skills/watchman/SKILL.md` before installation. The skill requires Rust Watchman v0.8.0 or newer and tells agents to stop on an older command surface. The hosted release payload remains v0.2.0 until the v0.8.0 cross-platform archives are published.
+Review `skills/watchman/SKILL.md` before installation. The hosted CLI and complete agent skill both target Rust Watchman v0.8.0 and the skill tells agents to stop on an older command surface.
 
 Create another hosted tool by adding:
 
