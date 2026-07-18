@@ -78,6 +78,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
+	} else if strings.HasSuffix(clean, ".yaml") || strings.HasSuffix(clean, ".yml") {
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Header().Set("Content-Type", "application/yaml; charset=utf-8")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
 	} else if strings.HasSuffix(clean, ".md") {
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Content-Type", "text/markdown; charset=utf-8")

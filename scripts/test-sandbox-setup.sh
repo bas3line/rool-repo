@@ -24,7 +24,10 @@ mkdir -p "$temporary/bin" "$temporary/install"
 cp "$ROOT/scripts/testdata/mock-curl.sh" "$temporary/bin/curl"
 cp "$ROOT/scripts/testdata/mock-npx.sh" "$temporary/bin/npx"
 cp "$ROOT/scripts/testdata/mock-codex.sh" "$temporary/bin/codex"
-chmod 0755 "$temporary/bin/curl" "$temporary/bin/npx" "$temporary/bin/codex"
+cp "$ROOT/scripts/testdata/mock-claude.sh" "$temporary/bin/claude"
+cp "$ROOT/scripts/testdata/mock-gemini.sh" "$temporary/bin/gemini"
+chmod 0755 "$temporary/bin/curl" "$temporary/bin/npx" "$temporary/bin/codex" \
+  "$temporary/bin/claude" "$temporary/bin/gemini"
 : > "$temporary/actions.log"
 
 export SANDBOX_TEST_VERSION=$VERSION
@@ -40,4 +43,6 @@ SANDBOX_INSTALL_DIR="$temporary/install" \
 "$temporary/install/sandbox-mcp" --version
 grep -F "npx --yes skills add bas3line/rool-repo --skill sandbox-platform --agent * --global --yes" "$temporary/actions.log" >/dev/null
 grep -F "codex mcp add sandbox -- $temporary/install/sandbox-mcp" "$temporary/actions.log" >/dev/null
+grep -F "claude mcp add --scope user --transport stdio sandbox -- $temporary/install/sandbox-mcp" "$temporary/actions.log" >/dev/null
+grep -F "gemini mcp add sandbox $temporary/install/sandbox-mcp --scope user" "$temporary/actions.log" >/dev/null
 printf '%s\n' "Sandbox full setup integration test passed for $os/$arch"

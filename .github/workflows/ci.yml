@@ -33,6 +33,8 @@ jobs:
           sh -n scripts/testdata/mock-curl.sh
           sh -n scripts/testdata/mock-npx.sh
           sh -n scripts/testdata/mock-codex.sh
+          sh -n scripts/testdata/mock-claude.sh
+          sh -n scripts/testdata/mock-gemini.sh
       - name: Verify Sandbox installer and release
         run: |
           sh scripts/test-sandbox-installer.sh
