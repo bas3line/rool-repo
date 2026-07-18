@@ -21,9 +21,6 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
-      - name: Install Sandbox runtime dependency
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libpq5
       - name: Test registry server
         run: go test ./...
       - name: Check shell syntax

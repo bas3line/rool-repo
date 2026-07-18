@@ -17,7 +17,7 @@ curl -fsSL https://tools.yshubham.com/sandbox/install.sh | sh
 sandbox --help
 ```
 
-The initial v0.1.0 registry release includes macOS ARM64 and Linux x86-64 archives. The Sandbox release workflow is ready to add macOS x86-64 and Linux ARM64 without changing the installer. `sandboxd` also requires the platform `libpq` runtime; the supported Docker deployment already packages it.
+The initial v0.1.0 registry release includes macOS ARM64 and Linux x86-64 archives. The Sandbox release workflow is ready to add macOS x86-64 and Linux ARM64 without changing the installer. Release binaries bundle `libpq` and vendored OpenSSL, avoiding machine-specific PostgreSQL client paths.
 
 Then connect the client to a self-hosted controller:
 
