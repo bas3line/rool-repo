@@ -1,16 +1,34 @@
 # Tools Host
 
-Standalone Go service for serving installation scripts and versioned release artifacts from Railway.
+Standalone Go service for serving Watchman installation, versioned release artifacts, and a cross-agent skill landing page from Railway.
 
 ## Public Layout
 
 ```text
 https://tools.yshubham.com/watchman/install.sh
+https://tools.yshubham.com/skills
 https://tools.yshubham.com/watchman/releases/v0.2.0/gpu-watchman_linux_amd64.tar.gz
 https://tools.yshubham.com/watchman/releases/v0.2.0/gpu-watchman_linux_amd64.tar.gz.sha256
 ```
 
-The Watchman installer is proxied from `bas3line/gpu-watchman` at request time. The `public/` directory holds only release artifacts. Create another tool by adding:
+The Watchman installer is proxied from this repository's canonical `install.sh` at request time. Release archives retain the internal `gpu-watchman` member for compatibility; the installer verifies and installs it as the public `watchman` command. The `skills/watchman/` package follows the Agent Skills `SKILL.md` convention, and `/skills` publishes the human-facing install surface.
+
+Install the binary:
+
+```sh
+curl -fsSL https://tools.yshubham.com/watchman/install.sh | sh
+watchman version
+```
+
+Install the Watchman skill globally into every agent supported by the Skills CLI:
+
+```sh
+npx skills add bas3line/rool-repo --skill watchman --agent '*' --global --yes
+```
+
+Review `skills/watchman/SKILL.md` before installation. The skill requires Rust Watchman v0.8.0 or newer and tells agents to stop on an older command surface. The hosted release payload remains v0.2.0 until the v0.8.0 cross-platform archives are published.
+
+Create another hosted tool by adding:
 
 ```text
 public/exporter/releases/vX.Y.Z/
@@ -20,17 +38,16 @@ Use `templates/install.sh.tmpl` as the starting point for a new canonical instal
 
 ## Add GPU Watchman Artifacts
 
-Build and package each target from the repository root:
+Build and package each target from the GPU Watchman repository root, then copy the immutable archives and checksum files here:
 
 ```sh
-mkdir -p web/public/watchman/releases/v0.2.0
-GOOS=linux GOARCH=amd64 go build -trimpath -ldflags='-s -w' -o gpu-watchman ./code/cmd/gpu-watchman
-tar -czf web/public/watchman/releases/v0.2.0/gpu-watchman_linux_amd64.tar.gz gpu-watchman
-shasum -a 256 web/public/watchman/releases/v0.2.0/gpu-watchman_linux_amd64.tar.gz > web/public/watchman/releases/v0.2.0/gpu-watchman_linux_amd64.tar.gz.sha256
-rm gpu-watchman
+cargo build --release --locked
+mkdir -p /path/to/rool-repo/public/watchman/releases/v0.8.0
+tar -C target/release -czf /path/to/rool-repo/public/watchman/releases/v0.8.0/gpu-watchman_darwin_arm64.tar.gz gpu-watchman
+shasum -a 256 /path/to/rool-repo/public/watchman/releases/v0.8.0/gpu-watchman_darwin_arm64.tar.gz > /path/to/rool-repo/public/watchman/releases/v0.8.0/gpu-watchman_darwin_arm64.tar.gz.sha256
 ```
 
-Repeat for `linux_arm64`, `darwin_amd64`, and `darwin_arm64`. Each archive must contain one executable named `gpu-watchman`.
+Repeat for `linux_amd64`, `linux_arm64`, and `darwin_amd64`. Each archive must contain one executable named `gpu-watchman`.
 
 ## Local Run
 
@@ -38,6 +55,7 @@ Repeat for `linux_arm64`, `darwin_amd64`, and `darwin_arm64`. Each archive must 
 go run ./cmd/tools-host
 curl http://localhost:8080/healthz
 curl http://localhost:8080/watchman/install.sh
+curl http://localhost:8080/skills
 ```
 
 Set `PORT` and `TOOLS_ROOT` when required:
@@ -49,7 +67,7 @@ PORT=9000 TOOLS_ROOT=./public go run ./cmd/tools-host
 ## Railway Deployment
 
 1. In Railway, create a project and deploy this repository.
-2. Set the service root directory to `web`.
+2. Use the repository root as the service root directory.
 3. Railway detects the `Dockerfile`, starts the service on its supplied `PORT`, and checks `/healthz`.
 4. Add the custom domain `tools.yshubham.com` in Railway's service settings.
 5. Create exactly the DNS record Railway shows for that domain in the `yshubham.com` DNS zone. Wait for Railway verification and TLS issuance.

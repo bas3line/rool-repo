@@ -38,6 +38,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.proxyInstaller(w, r)
 		return
 	}
+	if r.URL.Path == "/skills" || r.URL.Path == "/skills/" {
+		s.serveSkillsPage(w, r)
+		return
+	}
 
 	clean := path.Clean("/" + r.URL.Path)
 	if clean == "/" || strings.HasSuffix(r.URL.Path, "/") {
@@ -58,6 +62,23 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.logger.Info("asset served", "method", r.Method, "path", clean, "bytes", info.Size())
+	http.ServeFile(w, r, filename)
+}
+
+func (s *Server) serveSkillsPage(w http.ResponseWriter, r *http.Request) {
+	filename := filepath.Join(s.root, "skills", "index.html")
+	info, err := os.Stat(filename)
+	if err != nil || !info.Mode().IsRegular() {
+		http.NotFound(w, r)
+		return
+	}
+	w.Header().Set("Cache-Control", "public, max-age=300")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
+	w.Header().Set("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+	w.Header().Set("Referrer-Policy", "no-referrer")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	s.logger.Info("skills page served", "method", r.Method, "bytes", info.Size())
 	http.ServeFile(w, r, filename)
 }
 

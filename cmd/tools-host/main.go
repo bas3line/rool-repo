@@ -17,7 +17,7 @@ func main() {
 	if root == "" {
 		root = "./public"
 	}
-	const installerSource = "https://raw.githubusercontent.com/bas3line/gpu-watchman/main/install.sh"
+	const installerSource = "https://raw.githubusercontent.com/bas3line/rool-repo/main/install.sh"
 
 	handler := server.New(root, installerSource, slog.Default())
 	slog.Info("tools host listening", "address", "0.0.0.0:"+port, "root", root, "installer_source", installerSource)

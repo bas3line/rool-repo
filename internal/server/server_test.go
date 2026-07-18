@@ -5,6 +5,8 @@ import (
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -22,6 +24,34 @@ func TestProxiesInstallerWithSafeHeaders(t *testing.T) {
 	}
 	if got := recorder.Header().Get("Cache-Control"); got != "no-cache" {
 		t.Fatalf("cache control = %q", got)
+	}
+}
+
+func TestServesSkillsPageWithBrowserSafetyHeaders(t *testing.T) {
+	root := t.TempDir()
+	directory := filepath.Join(root, "skills")
+	if err := os.MkdirAll(directory, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(directory, "index.html"), []byte("<!doctype html><title>Skills</title>"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := New(root, "https://example.invalid/install.sh", slog.New(slog.NewTextHandler(io.Discard, nil)))
+	for _, path := range []string{"/skills", "/skills/"} {
+		recorder := httptest.NewRecorder()
+		server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, path, nil))
+		if recorder.Code != http.StatusOK {
+			t.Fatalf("path %q status = %d", path, recorder.Code)
+		}
+		if got := recorder.Header().Get("Content-Type"); got != "text/html; charset=utf-8" {
+			t.Fatalf("content type = %q", got)
+		}
+		if got := recorder.Header().Get("Content-Security-Policy"); got == "" {
+			t.Fatal("missing content security policy")
+		}
+		if got := recorder.Header().Get("X-Content-Type-Options"); got != "nosniff" {
+			t.Fatalf("x-content-type-options = %q", got)
+		}
 	}
 }
 
