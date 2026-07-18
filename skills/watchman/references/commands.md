@@ -2,6 +2,8 @@
 
 Read only the section needed for the current task. Confirm flags against `watchman <command> --help` because unsupported inputs must fail instead of being guessed.
 
+For the full option surface, precedence rules, defaults, limits, aliases and environment variables, read [cli.md](cli.md).
+
 ## Node triage
 
 Collect a point-in-time report and process attribution:
@@ -128,6 +130,58 @@ watchman serve \
 ```
 
 Do not use `--no-api-auth` outside an explicitly accepted local debugging run. Put remote access behind an authenticated, rate-limited TLS proxy.
+
+## Profiles and configuration
+
+Create a private starter profile, validate it without contacting hardware, then inspect only redacted normalized values:
+
+```sh
+watchman config init watchman.toml
+watchman --config watchman.toml config validate
+watchman --config watchman.toml --profile production config show --format json
+```
+
+Profiles are explicit and never auto-discovered. Values resolve as built-in defaults, selected profile, environment, then CLI. Read [config.md](config.md) before editing the schema or file permissions.
+
+## History and node comparison
+
+Summarize a private NDJSON history file:
+
+```sh
+watchman history /var/lib/watchman/history.ndjson --format json
+```
+
+Compare point-in-time hardware and telemetry reports:
+
+```sh
+watchman compare before.json after.json --fail-on-regression --format json
+```
+
+Use `watchman rollout` for canary reports and `watchman benchmark compare` for saturation reports. These formats are intentionally separate.
+
+## Incident bundle
+
+Collect one portable support artifact after confirming its selected evidence scope:
+
+```sh
+watchman bundle --output node-support.json
+```
+
+Treat bundles and histories as private operational artifacts. Inspect `watchman bundle --help` for probe, driver and source-selection flags before collection.
+
+## Shell completions
+
+Generate completion text without editing shell startup files:
+
+```sh
+watchman completions bash
+watchman completions zsh
+watchman completions fish
+watchman completions powershell
+watchman completions elvish
+```
+
+Write or source the generated output only when the user asks to configure that shell.
 
 ## Evidence files
 

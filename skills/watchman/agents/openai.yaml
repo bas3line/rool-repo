@@ -1,4 +1,4 @@
 interface:
-  display_name: "Watchman GPU Operations"
-  short_description: "Operate and benchmark inference GPUs safely"
-  default_prompt: "Use $watchman to inspect this GPU node and return privacy-safe evidence with the correct exit-code interpretation."
+  display_name: "Watchman Inference Operations"
+  short_description: "Operate every Watchman inference workflow"
+  default_prompt: "Use $watchman to choose and run the correct Watchman workflow, then interpret its typed evidence and exit policy."

@@ -1,58 +1,66 @@
 ---
 name: watchman
-description: Operate the Watchman CLI for NVIDIA GPU and AI inference-node inspection, vLLM/OpenAI-compatible endpoint validation, privacy-safe runtime discovery, model-capacity planning, active canaries, bounded saturation benchmarks, and offline regression gates. Use when an agent needs to diagnose a GPU server, inspect inference processes or model artifacts, validate a deployment, compare benchmark evidence, collect support evidence, or configure Watchman monitoring.
+description: Operate the complete Watchman CLI for NVIDIA GPU and inference-node observability, process attribution, vLLM/OpenAI-compatible telemetry, runtime fingerprints, safetensors inspection, model-capacity planning, canary SLOs, saturation benchmarks, benchmark and rollout regression gates, history, support bundles, profiles, Prometheus service operation, and shell completions. Use for GPU incident response, inference deployment validation, performance testing, capacity analysis, evidence comparison, monitoring setup, or any task involving the watchman command.
 ---
 
 # Watchman
 
-Use the `watchman` executable to collect typed, privacy-safe evidence from inference nodes. Prefer machine output, preserve nonclaims, and distinguish passive inspection from active traffic.
+Use `watchman` as an evidence-first inference operations CLI. Match the exact installed command surface, choose the narrowest workflow that answers the question, and retain Watchman's typed limitations.
 
-## Start safely
+## Verify before operating
 
-1. Run `watchman version` and `watchman --help` before choosing flags.
-2. Require Watchman `0.8.0` or newer for the workflows in this skill. If the version is older or a subcommand is absent, stop and request an upgrade; do not invent a compatibility flag.
-3. Read [references/commands.md](references/commands.md) for the applicable workflow and exact command pattern.
-4. Use `--format json` for one report and `--format ndjson` for streams or automation.
-5. Interpret exit codes with the emitted report. Exit `0` completed under the selected policy, `1` is a usage/setup/I/O failure, and `2` is a completed fail-closed policy result.
+1. Run `watchman version` and `watchman --help`.
+2. Require version `0.8.0` or newer for this skill. If older, report the installed version and request an upgrade.
+3. Read the applicable section of [references/cli.md](references/cli.md) before composing a command. It is the complete option reference.
+4. Run `watchman <command> --help` to confirm flags against the installed binary. Never guess or silently substitute an option.
+5. Use `--format json` for a single automation artifact and `--format ndjson` for streams, history, or CI.
 
-## Choose the workflow
+## Complete command map
 
-| Need | Command |
+| Task | Command |
 | --- | --- |
-| One node inventory and health report | `watchman snapshot` |
-| Live terminal control room | `watchman top` |
-| GPU process, VRAM, owner and container attribution | `watchman ps` |
-| Driver, telemetry and endpoint validation | `watchman doctor` |
-| Local vLLM/SGLang/TGI/Triton/TensorRT-LLM evidence | `watchman runtime inspect` |
-| Safetensors metadata and byte validation | `watchman artifact inspect` |
-| Model and KV-cache memory planning | `watchman capacity` |
-| Small correctness and latency probe | `watchman canary` |
-| Explicit closed-loop concurrency ladder | `watchman benchmark saturation` |
-| Offline saturation regression gate | `watchman benchmark compare` |
-| Offline canary rollout gate | `watchman rollout` |
-| Historical or before/after analysis | `watchman history` / `watchman compare` |
-| Prometheus and report service | `watchman serve` |
-| Incident handoff artifact | `watchman bundle` |
+| Point-in-time GPU, health, process and endpoint report | `watchman snapshot` |
+| Live terminal control room | `watchman top` / `watchman watch` |
+| Continuous Prometheus, health and report service | `watchman serve` / `watchman exporter` |
+| GPU process, VRAM, owner, container and pod attribution | `watchman ps` |
+| Driver, source, attribution and endpoint checks | `watchman doctor` |
+| Local engine/framework/launch evidence for explicit PIDs | `watchman runtime inspect` |
+| Safetensors metadata, byte, dtype and shard validation | `watchman artifact inspect` |
+| Weights, topology, KV cache, headroom and concurrency planning | `watchman capacity` |
+| Small active correctness, success and latency SLO probe | `watchman canary` |
+| Bounded active closed-loop concurrency ladder | `watchman benchmark saturation` |
+| Offline exact-ladder performance regression gate | `watchman benchmark compare` |
+| Offline canary baseline/candidate rollout gate | `watchman rollout` |
+| NDJSON availability, peak and recurring-finding summary | `watchman history` |
+| Before/after hardware and telemetry comparison | `watchman compare` |
+| Portable incident handoff evidence | `watchman bundle` |
+| Create, validate and redact operational profiles | `watchman config init|validate|show` |
+| Generate Bash, Zsh, Fish, PowerShell or Elvish completion | `watchman completions` |
+| Print version | `watchman version` / `watchman --version` |
 
-## Preserve the safety boundary
+## Load only the needed reference
 
-- Treat `snapshot`, `top`, `ps`, `doctor`, `runtime`, `artifact`, `capacity`, `history`, `compare`, `rollout`, and `bundle` as passive or offline unless their explicit options say otherwise.
-- Treat `canary` and `benchmark saturation` as active workloads. Obtain authorization for the endpoint, token cost, concurrency ladder, and test window before running them.
-- Never run a saturation benchmark against unrelated production traffic without explicit approval. Start with `1,2,4,8`; expand only after reviewing errors, temperature, memory, queueing, and endpoint health.
-- Prefer `--api-key-file`, `--prompt-file`, and file-backed service tokens. Do not place credentials, customer prompts, or sensitive expectations in process arguments.
-- Keep the HTTP service on loopback unless the user supplies an authenticated TLS boundary and explicitly authorizes remote exposure.
-- Do not reinterpret concurrency as server batch size, GPU occupancy, or proven capacity. Do not reinterpret endpoint token usage as raw GPU decode throughput.
-- Do not claim statistical significance, causality, production capacity, cost, or an SLA from a single canary or saturation ladder.
+- Read [references/cli.md](references/cli.md) for every command, flag, environment variable, profile rule, output mode, and exit code.
+- Read [references/config.md](references/config.md) when creating or reviewing `config_version = 1` profiles and precedence.
+- Read [references/report-schema.md](references/report-schema.md) when parsing JSON/NDJSON or deciding what a field proves.
+- Read [references/commands.md](references/commands.md) for common operator recipes.
+- Read [references/history.md](references/history.md) for time-window, rotation and historical analysis.
+- Read [references/comparison.md](references/comparison.md) for node before/after comparisons.
+- Read [references/rollout.md](references/rollout.md) for canary rollout compatibility and formulas.
+- Read [references/benchmark-comparison.md](references/benchmark-comparison.md) for saturation comparison formulas and CI behavior.
 
-## Return useful evidence
+## Apply the safety boundary
 
-Report:
+- Passive and offline workflows do not authorize endpoint load. `canary` and `benchmark saturation` send synthetic requests and may consume serving capacity or billable tokens.
+- Obtain explicit endpoint, workload, concurrency and time-window authorization before active testing. Start with a small ladder and expand only after reviewing errors, thermals, VRAM, queueing and source completeness.
+- Prefer `--api-key-file`, `--prompt-file`, and file-backed service tokens. Never put credentials or sensitive prompts in command arguments, reports, logs, or summaries.
+- Keep `serve` on loopback unless the user explicitly authorizes remote exposure with authentication and an external TLS boundary.
+- Treat exit `0` as completed under the selected policy, exit `1` as usage/setup/I/O failure, and exit `2` as completed fail-closed evidence. Inspect the emitted report before explaining a nonzero result.
+- Preserve `not_evaluable` and incomplete evidence. Never turn missing samples, incompatible identity, missing token usage, unavailable telemetry, or a zero baseline into a pass.
+- Do not claim production capacity, causal attribution, statistical significance, GPU decode throughput, batch size, occupancy, cost, or SLA certification unless separate evidence proves it.
 
-1. Exact command and Watchman version, with secrets omitted.
-2. Target scope, UTC time window, model/workload identity, and tested concurrency points.
-3. Typed report status, source completeness, failed gates, and exit code.
-4. Latency, successful request rate, completion-token goodput, errors, and GPU evidence only when present.
-5. Missing evidence and Watchman's stated nonclaims.
-6. Recommended next test, keeping observed facts separate from inference.
+## Report results
 
-Never paste credentials, prompts, generated output, raw environment values, URL queries, or arbitrary server diagnostics into a report.
+Return the exact redacted command, Watchman version, UTC window, target scope, model/workload identity, tested stages, source completeness, typed status, failed or unavailable gates, exit code, and stated nonclaims. Separate observed facts from inference and recommend the smallest next test that resolves missing evidence.
+
+Never expose credentials, prompt content, generated output, URL queries, raw environment values, arbitrary server diagnostics, filesystem identities omitted by the schema, or private artifact contents.

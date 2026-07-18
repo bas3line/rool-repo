@@ -36,7 +36,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.URL.Path == "/skills" || r.URL.Path == "/skills/" {
-		s.serveSkillsPage(w, r)
+		s.serveSkillsInstructions(w, r)
 		return
 	}
 
@@ -75,19 +75,16 @@ func (s *Server) serveInstaller(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, s.installerPath)
 }
 
-func (s *Server) serveSkillsPage(w http.ResponseWriter, r *http.Request) {
-	filename := filepath.Join(s.root, "skills", "index.html")
+func (s *Server) serveSkillsInstructions(w http.ResponseWriter, r *http.Request) {
+	filename := filepath.Join(s.root, "skills.txt")
 	info, err := os.Stat(filename)
 	if err != nil || !info.Mode().IsRegular() {
 		http.NotFound(w, r)
 		return
 	}
-	w.Header().Set("Cache-Control", "public, max-age=300")
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Header().Set("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
-	w.Header().Set("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
-	w.Header().Set("Referrer-Policy", "no-referrer")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
-	s.logger.Info("skills page served", "method", r.Method, "bytes", info.Size())
+	s.logger.Info("skills instructions served", "method", r.Method, "bytes", info.Size())
 	http.ServeFile(w, r, filename)
 }
