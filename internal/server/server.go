@@ -46,13 +46,19 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	filename := filepath.Join(s.root, filepath.FromSlash(strings.TrimPrefix(clean, "/")))
+	isRelease := strings.Contains(clean, "/releases/")
+	if isRelease {
+		// Do not let an edge cache retain a not-found response while a new
+		// immutable release is rolling out across service replicas.
+		w.Header().Set("Cache-Control", "no-store")
+	}
 	info, err := os.Stat(filename)
 	if err != nil || !info.Mode().IsRegular() {
 		http.NotFound(w, r)
 		return
 	}
 
-	if strings.Contains(clean, "/releases/") {
+	if isRelease {
 		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
 	} else if contentType := mime.TypeByExtension(filepath.Ext(filename)); contentType != "" {
 		w.Header().Set("Content-Type", contentType)

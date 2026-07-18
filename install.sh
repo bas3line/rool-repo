@@ -51,14 +51,15 @@ fi
 
 archive="gpu-watchman_${os}_${arch}.tar.gz"
 url="$BASE_URL/watchman/releases/$VERSION/$archive"
+cache_key="?v=$VERSION"
 tmp=$(mktemp -d "${TMPDIR:-/tmp}/watchman.XXXXXX")
 trap 'rm -rf "$tmp"' EXIT INT TERM
 
 printf '%s\n' "Installing Watchman $VERSION for $os/$arch"
 curl --fail --location --proto '=https' --proto-redir '=https' --silent --show-error \
-  --output "$tmp/$archive" -- "$url"
+  --output "$tmp/$archive" -- "$url$cache_key"
 curl --fail --location --proto '=https' --proto-redir '=https' --silent --show-error \
-  --output "$tmp/$archive.sha256" -- "$url.sha256" || fail "checksum file is unavailable"
+  --output "$tmp/$archive.sha256" -- "$url.sha256$cache_key" || fail "checksum file is unavailable"
 
 expected=$(awk '
   NR == 1 { print $1; next }

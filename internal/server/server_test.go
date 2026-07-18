@@ -66,3 +66,15 @@ func TestRejectsDirectoriesAndWriteMethods(t *testing.T) {
 		}
 	}
 }
+
+func TestMissingReleaseAssetIsNotCached(t *testing.T) {
+	server := New(t.TempDir(), filepath.Join(t.TempDir(), "install.sh"), slog.New(slog.NewTextHandler(io.Discard, nil)))
+	recorder := httptest.NewRecorder()
+	server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/watchman/releases/v9.9.9/missing.tar.gz", nil))
+	if recorder.Code != http.StatusNotFound {
+		t.Fatalf("status = %d", recorder.Code)
+	}
+	if got := recorder.Header().Get("Cache-Control"); got != "no-store" {
+		t.Fatalf("cache control = %q", got)
+	}
+}
