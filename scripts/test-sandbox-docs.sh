@@ -27,9 +27,9 @@ done
 
 grep -F 'href="/docs/sandbox/index.md"' "$DOCS/index.html" >/dev/null
 grep -F 'href="/docs/sandbox/llms.txt"' "$DOCS/index.html" >/dev/null
-grep -F 'href="/theme.css"' "$DOCS/index.html" >/dev/null
-grep -F 'href="/docs/docs.css"' "$DOCS/index.html" >/dev/null
-grep -F 'src="/docs/docs.js"' "$DOCS/index.html" >/dev/null
+grep -F 'href="/theme.css?v=20260719"' "$DOCS/index.html" >/dev/null
+grep -F 'href="/docs/docs.css?v=20260719"' "$DOCS/index.html" >/dev/null
+grep -F 'src="/docs/docs.js?v=20260719"' "$DOCS/index.html" >/dev/null
 grep -F 'https://tools.yshubham.com/docs/sandbox/mcp.md' "$DOCS/index.md" >/dev/null
 grep -F 'https://tools.yshubham.com/docs/sandbox/security.md' "$DOCS/llms.txt" >/dev/null
 grep -F 'href="/docs/sandbox/"' "$ROOT/public/index.html" >/dev/null
@@ -42,14 +42,14 @@ grep -F 'href="/docs/sandbox/"' "$ROOT/public/index.html" >/dev/null
   printf '%s\n' 'missing or empty Watchman raw Markdown reference' >&2
   exit 1
 }
-grep -F 'href="/theme.css"' "$WATCHMAN_DOCS/index.html" >/dev/null
-grep -F 'href="/docs/docs.css"' "$WATCHMAN_DOCS/index.html" >/dev/null
-grep -F 'src="/docs/docs.js"' "$WATCHMAN_DOCS/index.html" >/dev/null
+grep -F 'href="/theme.css?v=20260719"' "$WATCHMAN_DOCS/index.html" >/dev/null
+grep -F 'href="/docs/docs.css?v=20260719"' "$WATCHMAN_DOCS/index.html" >/dev/null
+grep -F 'src="/docs/docs.js?v=20260719"' "$WATCHMAN_DOCS/index.html" >/dev/null
 grep -F 'href="/docs/watchman/reference.md"' "$WATCHMAN_DOCS/index.html" >/dev/null
 
-grep -F 'href="/theme.css"' "$ROOT/public/index.html" >/dev/null
-grep -F 'href="/tools.css"' "$ROOT/public/index.html" >/dev/null
-grep -F 'src="/tools.js"' "$ROOT/public/index.html" >/dev/null
+grep -F 'href="/theme.css?v=20260719"' "$ROOT/public/index.html" >/dev/null
+grep -F 'href="/tools.css?v=20260719"' "$ROOT/public/index.html" >/dev/null
+grep -F 'src="/tools.js?v=20260719"' "$ROOT/public/index.html" >/dev/null
 grep -F 'Codex' "$ROOT/public/index.html" >/dev/null
 grep -F 'Claude Code' "$ROOT/public/index.html" >/dev/null
 grep -F 'OpenCode' "$ROOT/public/index.html" >/dev/null
