@@ -1,7 +1,6 @@
 package server
 
 import (
-	"io"
 	"log/slog"
 	"mime"
 	"net/http"
@@ -9,18 +8,16 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
-	"time"
 )
 
 type Server struct {
-	root            string
-	installerSource string
-	logger          *slog.Logger
-	client          *http.Client
+	root          string
+	installerPath string
+	logger        *slog.Logger
 }
 
-func New(root, installerSource string, logger *slog.Logger) *Server {
-	return &Server{root: root, installerSource: installerSource, logger: logger, client: &http.Client{Timeout: 10 * time.Second}}
+func New(root, installerPath string, logger *slog.Logger) *Server {
+	return &Server{root: root, installerPath: installerPath, logger: logger}
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +32,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.URL.Path == "/watchman/install.sh" {
-		s.proxyInstaller(w, r)
+		s.serveInstaller(w, r)
 		return
 	}
 	if r.URL.Path == "/skills" || r.URL.Path == "/skills/" {
@@ -65,6 +62,19 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, filename)
 }
 
+func (s *Server) serveInstaller(w http.ResponseWriter, r *http.Request) {
+	info, err := os.Stat(s.installerPath)
+	if err != nil || !info.Mode().IsRegular() {
+		http.NotFound(w, r)
+		return
+	}
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	s.logger.Info("installer served", "method", r.Method, "bytes", info.Size())
+	http.ServeFile(w, r, s.installerPath)
+}
+
 func (s *Server) serveSkillsPage(w http.ResponseWriter, r *http.Request) {
 	filename := filepath.Join(s.root, "skills", "index.html")
 	info, err := os.Stat(filename)
@@ -80,30 +90,4 @@ func (s *Server) serveSkillsPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-Content-Type-Options", "nosniff")
 	s.logger.Info("skills page served", "method", r.Method, "bytes", info.Size())
 	http.ServeFile(w, r, filename)
-}
-
-func (s *Server) proxyInstaller(w http.ResponseWriter, r *http.Request) {
-	request, err := http.NewRequestWithContext(r.Context(), r.Method, s.installerSource, nil)
-	if err != nil {
-		http.Error(w, "installer source is invalid", http.StatusBadGateway)
-		return
-	}
-	response, err := s.client.Do(request)
-	if err != nil {
-		s.logger.Error("installer proxy failed", "error", err)
-		http.Error(w, "installer source is unavailable", http.StatusBadGateway)
-		return
-	}
-	defer response.Body.Close()
-	if response.StatusCode < http.StatusOK || response.StatusCode >= http.StatusMultipleChoices {
-		s.logger.Error("installer source returned an error", "status", response.StatusCode)
-		http.Error(w, "installer source is unavailable", http.StatusBadGateway)
-		return
-	}
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.Header().Set("Cache-Control", "no-cache")
-	w.WriteHeader(response.StatusCode)
-	if r.Method != http.MethodHead {
-		_, _ = io.Copy(w, response.Body)
-	}
 }

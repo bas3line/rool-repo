@@ -11,7 +11,7 @@ https://tools.yshubham.com/watchman/releases/v0.2.0/gpu-watchman_linux_amd64.tar
 https://tools.yshubham.com/watchman/releases/v0.2.0/gpu-watchman_linux_amd64.tar.gz.sha256
 ```
 
-The Watchman installer is proxied from this repository's canonical `install.sh` at request time. Release archives retain the internal `gpu-watchman` member for compatibility; the installer verifies and installs it as the public `watchman` command. The `skills/watchman/` package follows the Agent Skills `SKILL.md` convention, and `/skills` publishes the human-facing install surface.
+The container packages this repository's canonical `install.sh` and serves it without a runtime GitHub dependency. Release archives retain the internal `gpu-watchman` member for compatibility; the installer verifies and installs it as the public `watchman` command. The `skills/watchman/` package follows the Agent Skills `SKILL.md` convention, and `/skills` publishes the human-facing install surface.
 
 Install the binary:
 

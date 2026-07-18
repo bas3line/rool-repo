@@ -10,10 +10,12 @@ import (
 	"testing"
 )
 
-func TestProxiesInstallerWithSafeHeaders(t *testing.T) {
-	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { _, _ = w.Write([]byte("#!/bin/sh\n")) }))
-	defer upstream.Close()
-	server := New(t.TempDir(), upstream.URL, slog.New(slog.NewTextHandler(io.Discard, nil)))
+func TestServesPackagedInstallerWithSafeHeaders(t *testing.T) {
+	installer := filepath.Join(t.TempDir(), "install.sh")
+	if err := os.WriteFile(installer, []byte("#!/bin/sh\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	server := New(t.TempDir(), installer, slog.New(slog.NewTextHandler(io.Discard, nil)))
 	recorder := httptest.NewRecorder()
 	server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/watchman/install.sh", nil))
 	if recorder.Code != http.StatusOK {
@@ -36,7 +38,7 @@ func TestServesSkillsPageWithBrowserSafetyHeaders(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(directory, "index.html"), []byte("<!doctype html><title>Skills</title>"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	server := New(root, "https://example.invalid/install.sh", slog.New(slog.NewTextHandler(io.Discard, nil)))
+	server := New(root, filepath.Join(t.TempDir(), "install.sh"), slog.New(slog.NewTextHandler(io.Discard, nil)))
 	for _, path := range []string{"/skills", "/skills/"} {
 		recorder := httptest.NewRecorder()
 		server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, path, nil))
@@ -56,7 +58,7 @@ func TestServesSkillsPageWithBrowserSafetyHeaders(t *testing.T) {
 }
 
 func TestRejectsDirectoriesAndWriteMethods(t *testing.T) {
-	server := New(t.TempDir(), "https://example.invalid/install.sh", slog.New(slog.NewTextHandler(io.Discard, nil)))
+	server := New(t.TempDir(), filepath.Join(t.TempDir(), "install.sh"), slog.New(slog.NewTextHandler(io.Discard, nil)))
 	for _, request := range []*http.Request{
 		httptest.NewRequest(http.MethodGet, "/", nil),
 		httptest.NewRequest(http.MethodPost, "/watchman/install.sh", nil),

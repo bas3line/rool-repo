@@ -10,6 +10,7 @@ FROM alpine:3.22
 RUN adduser -D -H -u 10001 tools
 WORKDIR /app
 COPY --from=build /tools-host /usr/local/bin/tools-host
+COPY --chown=tools:tools install.sh ./install.sh
 COPY --chown=tools:tools public ./public
 USER tools
 ENV PORT=8080

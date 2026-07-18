@@ -17,10 +17,10 @@ func main() {
 	if root == "" {
 		root = "./public"
 	}
-	const installerSource = "https://raw.githubusercontent.com/bas3line/rool-repo/main/install.sh"
+	const installerPath = "./install.sh"
 
-	handler := server.New(root, installerSource, slog.Default())
-	slog.Info("tools host listening", "address", "0.0.0.0:"+port, "root", root, "installer_source", installerSource)
+	handler := server.New(root, installerPath, slog.Default())
+	slog.Info("tools host listening", "address", "0.0.0.0:"+port, "root", root, "installer_path", installerPath)
 	if err := http.ListenAndServe("0.0.0.0:"+port, handler); err != nil {
 		slog.Error("tools host stopped", "error", err)
 		os.Exit(1)
