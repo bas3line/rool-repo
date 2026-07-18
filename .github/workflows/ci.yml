@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  registry:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, macos-15]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Test registry server
+        run: go test ./...
+      - name: Check shell syntax
+        run: |
+          sh -n install.sh
+          sh -n public/sandbox/install.sh
+          sh -n public/sandbox/setup.sh
+          sh -n scripts/test-sandbox-installer.sh
+          sh -n scripts/test-sandbox-setup.sh
+          sh -n scripts/testdata/mock-curl.sh
+          sh -n scripts/testdata/mock-npx.sh
+          sh -n scripts/testdata/mock-codex.sh
+      - name: Verify Sandbox installer and release
+        run: |
+          sh scripts/test-sandbox-installer.sh
+          sh scripts/test-sandbox-setup.sh

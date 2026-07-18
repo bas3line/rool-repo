@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="A small registry for production inference tools, agent skills, and MCP servers.">
+    <meta name="description" content="An inspectable registry for self-hosted engineering tools, coding-agent skills, and MCP servers.">
     <meta name="theme-color" content="#181818">
     <meta name="color-scheme" content="dark">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;550;650&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
-    <title>tools — inference utility registry</title>
+    <title>tools — self-hosted engineering registry</title>
     <style>
       :root {
         --background: #181818;
@@ -297,6 +297,31 @@
         font-size: 0.72rem;
       }
 
+      .capability-lines {
+        display: grid;
+        gap: 0.42rem;
+        margin-top: 1rem;
+        padding: 0.85rem 0.9rem;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgb(255 255 255 / 0.018);
+      }
+
+      .capability-lines p {
+        display: grid;
+        grid-template-columns: 5.4rem 1fr;
+        gap: 0.7rem;
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+
+      .capability-lines code {
+        color: var(--green);
+        font-family: var(--mono);
+        font-size: 0.69rem;
+      }
+
       .command-wrap {
         position: relative;
         margin-top: 1.15rem;
@@ -502,6 +527,11 @@
           gap: 0.15rem;
         }
 
+        .capability-lines p {
+          grid-template-columns: 1fr;
+          gap: 0.08rem;
+        }
+
         pre {
           padding-right: 0.9rem;
           padding-bottom: 3.05rem;
@@ -536,11 +566,11 @@
 
       <section class="hero" aria-labelledby="page-title">
         <h1 id="page-title">tools.</h1>
-        <p class="hero-copy">a small, inspectable registry for production inference utilities, agent skills, and MCP servers. copy a command, install the thing, get back to operating.</p>
+        <p class="hero-copy">a small, inspectable registry for self-hosted engineering utilities, agent skills, and MCP servers. copy a command, install the thing, get back to building.</p>
         <div class="counts" aria-label="registry counts">
-          <span class="chip"><strong>1</strong> tool</span>
-          <span class="chip"><strong>1</strong> skill</span>
-          <span class="chip"><strong>0</strong> mcp</span>
+          <span class="chip"><strong>2</strong> tools</span>
+          <span class="chip"><strong>2</strong> skills</span>
+          <span class="chip"><strong>1</strong> mcp</span>
         </div>
         <nav aria-label="registry sections">
           <ul class="jump-links">
@@ -556,8 +586,43 @@
         <div class="section-heading">
           <h2 id="tools-heading">tools</h2>
           <span class="section-rule" aria-hidden="true"></span>
-          <span class="section-count">01 published</span>
+          <span class="section-count">02 published</span>
         </div>
+
+        <article class="entry">
+          <div class="entry-header">
+            <div class="entry-title-row">
+              <h3>Sandbox</h3>
+              <span class="kind">control plane + cli</span>
+              <span class="version">v0.1.0</span>
+            </div>
+            <span class="registry-state"><span class="status-dot" aria-hidden="true"></span>open source</span>
+          </div>
+          <p class="entry-description">A self-hosted Rust control plane for disposable coding environments and AI agents, with AEGIS risk-aware scheduling, Docker workers, PostgreSQL state, optional NATS events, and a typed remote CLI.</p>
+          <div class="chips" aria-label="Sandbox package contents">
+            <span class="chip">sandbox cli</span>
+            <span class="chip">sandboxd</span>
+            <span class="chip">sandbox-mcp</span>
+            <span class="chip">macOS ARM64 + Linux x86-64</span>
+          </div>
+          <div class="capability-lines" aria-label="Sandbox platform capabilities">
+            <p><code>schedule</code><span>multi-worker leases · heartbeats · labels · anti-affinity · warm-image ranking</span></p>
+            <p><code>isolate</code><span>AEGIS risk scoring · Docker workers · external VMM driver contract</span></p>
+            <p><code>control</code><span>CPU · memory · disk · PID · network · TTL · bounded output</span></p>
+            <p><code>operate</code><span>PostgreSQL · in-memory dev mode · optional NATS · Prometheus metrics</span></p>
+            <p><code>agents</code><span>Codex · Claude Code · OpenCode · Pi · Aider · Goose · CommandCode</span></p>
+          </div>
+          <div class="command-wrap">
+            <div class="command-label"># one command: binaries + skill + codex mcp</div>
+            <pre><code>curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh</code></pre>
+            <button class="copy-button" type="button" data-copy="curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh" aria-label="Copy Sandbox setup command">copy</button>
+          </div>
+          <div class="entry-links">
+            <a href="/sandbox/setup.sh">setup script</a>
+            <a href="/sandbox/install.sh">binary installer</a>
+            <a href="/sandbox/mcp.json">mcp config</a>
+          </div>
+        </article>
 
         <article class="entry">
           <div class="entry-header">
@@ -592,8 +657,36 @@
         <div class="section-heading">
           <h2 id="skills-heading">agent skills</h2>
           <span class="section-rule" aria-hidden="true"></span>
-          <span class="section-count">01 published</span>
+          <span class="section-count">02 published</span>
         </div>
+
+        <article class="entry">
+          <div class="entry-header">
+            <div class="entry-title-row">
+              <h3>sandbox-platform</h3>
+              <span class="kind">SKILL.md</span>
+            </div>
+            <span class="registry-state"><span class="status-dot" aria-hidden="true"></span>agent: *</span>
+          </div>
+          <p class="entry-description">Teaches coding agents the complete Sandbox lifecycle: trust classification, resource sizing, asynchronous operations, safe argv execution, capacity diagnosis, seven built-in agent profiles, and reliable cleanup.</p>
+          <div class="chips" aria-label="Sandbox skill coverage">
+            <span class="chip">CLI + MCP</span>
+            <span class="chip">risk signals</span>
+            <span class="chip">operation recovery</span>
+            <span class="chip">no_capacity diagnosis</span>
+            <span class="chip">secret boundaries</span>
+          </div>
+          <div class="command-wrap">
+            <div class="command-label"># install globally for supported agents</div>
+            <pre><code>npx skills add bas3line/rool-repo \
+  --skill sandbox-platform --agent '*' --global --yes</code></pre>
+            <button class="copy-button" type="button" data-copy="npx skills add bas3line/rool-repo --skill sandbox-platform --agent '*' --global --yes" aria-label="Copy Sandbox skill install command">copy</button>
+          </div>
+          <div class="entry-links">
+            <a href="/skills">raw instructions</a>
+            <a href="https://github.com/bas3line/rool-repo/tree/main/skills/sandbox-platform" target="_blank" rel="noreferrer">skill source</a>
+          </div>
+        </article>
 
         <article class="entry">
           <div class="entry-header">
@@ -621,12 +714,42 @@
         <div class="section-heading">
           <h2 id="mcp-heading">mcp servers</h2>
           <span class="section-rule" aria-hidden="true"></span>
-          <span class="section-count">00 published</span>
+          <span class="section-count">01 published</span>
         </div>
-        <div class="empty-entry">
-          <span class="empty-symbol" aria-hidden="true">[ ]</span>
-          <p><strong>no MCP server published yet.</strong>When one ships, this registry will show its transport, authentication scope, client configuration, and exact launch command here.</p>
-        </div>
+        <article class="entry">
+          <div class="entry-header">
+            <div class="entry-title-row">
+              <h3>sandbox-mcp</h3>
+              <span class="kind">stdio · 2025-11-25</span>
+              <span class="version">v0.1.0</span>
+            </div>
+            <span class="registry-state"><span class="status-dot" aria-hidden="true"></span>local bridge</span>
+          </div>
+          <p class="entry-description">Connects Codex and other MCP clients to a self-hosted Sandbox controller. Ships 10 typed lifecycle tools, three capability resources, two workflow prompts, structured results, tool annotations, and explicit error semantics.</p>
+          <div class="chips" aria-label="Sandbox MCP capabilities">
+            <span class="chip">10 tools</span>
+            <span class="chip">3 resources</span>
+            <span class="chip">2 prompts</span>
+            <span class="chip">SANDBOX_TOKEN</span>
+          </div>
+          <div class="capability-lines" aria-label="Sandbox MCP surface">
+            <p><code>lifecycle</code><span>health · create · exec · list · inspect · delete</span></p>
+            <p><code>async</code><span>operation snapshots · bounded wait · non-zero exit propagation</span></p>
+            <p><code>agents</code><span>profile discovery · risk-scored agent sandbox creation</span></p>
+            <p><code>context</code><span>capabilities · agent catalog · lifecycle workflow · task prompts</span></p>
+            <p><code>protocol</code><span>closed JSON schemas · annotations · structuredContent · isError</span></p>
+          </div>
+          <div class="command-wrap">
+            <div class="command-label"># register the installed stdio server with codex</div>
+            <pre><code>codex mcp add sandbox -- sandbox-mcp</code></pre>
+            <button class="copy-button" type="button" data-copy="codex mcp add sandbox -- sandbox-mcp" aria-label="Copy Sandbox MCP registration command">copy</button>
+          </div>
+          <div class="entry-links">
+            <a href="/sandbox/mcp.json">client template</a>
+            <a href="/sandbox/setup.sh">automatic setup</a>
+            <a href="https://github.com/bas3line/rool-repo/tree/main/skills/sandbox-platform/references/mcp.md" target="_blank" rel="noreferrer">agent guide</a>
+          </div>
+        </article>
       </section>
 
       <section class="section" id="endpoints" aria-labelledby="endpoints-heading">
@@ -636,6 +759,10 @@
           <span class="section-count">plain + inspectable</span>
         </div>
         <ul class="endpoint-list">
+          <li><code>/sandbox/setup.sh</code><span>one-command binaries + skill + Codex MCP setup</span></li>
+          <li><code>/sandbox/install.sh</code><span>checksum-verifying Sandbox binary installer</span></li>
+          <li><code>/sandbox/mcp.json</code><span>generic MCP client configuration template</span></li>
+          <li><code>/sandbox/latest</code><span>current immutable Sandbox release pointer</span></li>
           <li><code>/docs/watchman/</code><span>human and agent-ready Watchman documentation</span></li>
           <li><code>/watchman/install.sh</code><span>checksum-verifying CLI installer</span></li>
           <li><code>/skills</code><span>plain-text agent installation instructions</span></li>
@@ -644,7 +771,7 @@
       </section>
 
       <footer class="footer">
-        <span>built for inference engineers.</span>
+        <span>built for engineers who give agents shell access.</span>
         <a href="https://yshubham.com" target="_blank" rel="noreferrer">yshubham.com ↗</a>
       </footer>
     </main>
