@@ -1,0 +1,37 @@
+#!/bin/sh
+set -eu
+
+output=
+url=
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --output)
+      [ "$#" -ge 2 ] || exit 2
+      output=$2
+      shift 2
+      ;;
+    --)
+      shift
+      [ "$#" -eq 1 ] || exit 2
+      url=$1
+      shift
+      ;;
+    *) shift ;;
+  esac
+done
+
+[ -n "$output" ] || { printf '%s\n' 'mock curl: missing --output' >&2; exit 2; }
+[ -n "$url" ] || { printf '%s\n' 'mock curl: missing URL' >&2; exit 2; }
+
+relative=${url#https://registry.test/}
+[ "$relative" != "$url" ] || { printf '%s\n' 'mock curl: unexpected origin' >&2; exit 22; }
+relative=${relative%%\?*}
+source_file=${MOCK_WATCHMAN_REGISTRY_ROOT:?MOCK_WATCHMAN_REGISTRY_ROOT is required}/$relative
+[ -f "$source_file" ] || { printf '%s\n' "mock curl: missing $relative" >&2; exit 22; }
+cp "$source_file" "$output"
+
+if [ "${MOCK_WATCHMAN_CORRUPT_ARCHIVE:-0}" = 1 ]; then
+  case "$relative" in
+    *.tar.gz) printf 'corrupt' >>"$output" ;;
+  esac
+fi

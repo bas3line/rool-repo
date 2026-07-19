@@ -37,4 +37,4 @@ Update an installed skill:
 CLI source:   https://github.com/bas3line/gpu-watchman
 Skill source: https://github.com/bas3line/rool-repo/tree/main/skills/watchman
 
-The hosted CLI and complete agent skill both target Rust Watchman v0.8.0.
+The hosted CLI and complete agent skill both target Rust Watchman v0.8.2.

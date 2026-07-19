@@ -10,7 +10,7 @@ Use `watchman` as an evidence-first inference operations CLI. Match the exact in
 ## Verify before operating
 
 1. Run `watchman version` and `watchman --help`.
-2. Require version `0.8.0` or newer for this skill. If older, report the installed version and request an upgrade.
+2. Require version `0.8.2` or newer for this skill. If older, report the installed version and request an upgrade.
 3. Read the applicable section of [references/cli.md](references/cli.md) before composing a command. It is the complete option reference.
 4. Run `watchman <command> --help` to confirm flags against the installed binary. Never guess or silently substitute an option.
 5. Use `--format json` for a single automation artifact and `--format ndjson` for streams, history, or CI.

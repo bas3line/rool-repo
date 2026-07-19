@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+
+case "${1:-}" in
+  -s) printf '%s\n' "${MOCK_UNAME_S:?MOCK_UNAME_S is required}" ;;
+  -m) printf '%s\n' "${MOCK_UNAME_M:?MOCK_UNAME_M is required}" ;;
+  *) printf '%s\n' "mock uname only supports -s and -m" >&2; exit 2 ;;
+esac

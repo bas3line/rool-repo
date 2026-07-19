@@ -28,6 +28,7 @@ jobs:
           sh -n install.sh
           sh -n public/sandbox/install.sh
           sh -n public/sandbox/setup.sh
+          sh -n scripts/test-watchman-installer.sh
           sh -n scripts/test-sandbox-installer.sh
           sh -n scripts/test-sandbox-setup.sh
           sh -n scripts/test-sandbox-docs.sh
@@ -36,6 +37,10 @@ jobs:
           sh -n scripts/testdata/mock-codex.sh
           sh -n scripts/testdata/mock-claude.sh
           sh -n scripts/testdata/mock-gemini.sh
+          sh -n scripts/testdata/watchman-bin/curl
+          sh -n scripts/testdata/watchman-bin/uname
+      - name: Verify Watchman installer and release assets
+        run: sh scripts/test-watchman-installer.sh
       - name: Verify Sandbox installer and release
         run: |
           sh scripts/test-sandbox-installer.sh

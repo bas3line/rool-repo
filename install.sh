@@ -10,7 +10,7 @@ fail() {
 
 # WATCHMAN_* is the public contract. Keep GPU_WATCHMAN_* as a migration alias.
 BASE_URL=${WATCHMAN_BASE_URL:-${GPU_WATCHMAN_BASE_URL:-https://tools.yshubham.com}}
-VERSION=${WATCHMAN_VERSION:-${GPU_WATCHMAN_VERSION:-v0.8.0}}
+VERSION=${WATCHMAN_VERSION:-${GPU_WATCHMAN_VERSION:-v0.8.2}}
 INSTALL_DIR=${WATCHMAN_INSTALL_DIR:-${GPU_WATCHMAN_INSTALL_DIR:-/usr/local/bin}}
 BASE_URL=${BASE_URL%/}
 
@@ -61,8 +61,14 @@ curl --fail --location --proto '=https' --proto-redir '=https' --silent --show-e
 curl --fail --location --proto '=https' --proto-redir '=https' --silent --show-error \
   --output "$tmp/$archive.sha256" -- "$url.sha256$cache_key" || fail "checksum file is unavailable"
 
-expected=$(awk '
-  NR == 1 { print $1; next }
+expected=$(awk -v name="$archive" '
+  NR == 1 {
+    file = $2
+    sub(/^\*/, "", file)
+    if (NF != 2 || file != name) exit 1
+    print $1
+    next
+  }
   { exit 1 }
   END { if (NR != 1) exit 1 }
 ' "$tmp/$archive.sha256") || fail "malformed checksum file"
@@ -77,9 +83,31 @@ else
 fi
 [ "$expected" = "$actual" ] || fail "checksum mismatch"
 
+attestation_mode=${WATCHMAN_VERIFY_ATTESTATION:-${GPU_WATCHMAN_VERIFY_ATTESTATION:-auto}}
+case "$attestation_mode" in
+  auto|required)
+    if command -v gh >/dev/null 2>&1 && gh attestation verify --help >/dev/null 2>&1; then
+      printf '%s\n' "Verifying GitHub artifact attestation"
+      GH_FORCE_TTY=0 gh attestation verify "$tmp/$archive" \
+        --repo bas3line/gpu-watchman >/dev/null || fail "artifact attestation verification failed"
+    elif [ "$attestation_mode" = required ]; then
+      fail "a GitHub CLI with attestation support is required"
+    else
+      printf '%s\n' "Compatible GitHub CLI not found; continuing with SHA-256 verification"
+    fi
+    ;;
+  disabled) ;;
+  *) fail "WATCHMAN_VERIFY_ATTESTATION must be auto, required, or disabled" ;;
+esac
+
 member_names=$(tar -tzf "$tmp/$archive") || fail "cannot inspect release archive"
-[ "$member_names" = "gpu-watchman" ] || fail "archive must contain only gpu-watchman"
-member_listing=$(tar -tvzf "$tmp/$archive") || fail "cannot inspect release archive"
+expected_members='gpu-watchman
+README.md
+CHANGELOG.md
+SECURITY.md
+LICENSE'
+[ "$member_names" = "$expected_members" ] || fail "release archive has an unexpected member set"
+member_listing=$(tar -tvzf "$tmp/$archive" gpu-watchman) || fail "cannot inspect release archive"
 printf '%s\n' "$member_listing" | awk '
   NR == 1 && substr($1, 1, 1) == "-" { regular = 1; next }
   { regular = 0 }
