@@ -1,6 +1,6 @@
 # Sandbox documentation
 
-> Canonical agent entry point for Sandbox v0.1.2. Sandbox is a self-hosted Rust control plane for disposable coding environments and coding-agent workloads. Use this index to select the narrowest authoritative reference for the task.
+> Canonical agent entry point for Sandbox v0.1.3. Sandbox is a self-hosted Rust control plane for disposable coding environments and coding-agent workloads. Use this index to select the narrowest authoritative reference for the task.
 
 ## Canonical endpoints
 
@@ -24,6 +24,14 @@ sandbox doctor
 ```
 
 The setup installs or upgrades `sandbox`, `sandboxd`, `sandbox-mcp`, and the cross-agent skill. It registers detected Codex, Claude Code, and Gemini CLIs without writing `SANDBOX_TOKEN` into their configuration. Rerunning it verifies and replaces existing binaries while preserving existing MCP entries.
+
+## Share a local service
+
+```sh
+sandbox http 4321
+```
+
+This command requires only a listening local port. It prints a temporary public HTTPS URL and remains attached until Ctrl-C. It does not contact `SANDBOX_URL`. Treat the URL as public. For services inside a managed sandbox, use `sandbox tunnel create SANDBOX_ID --port PORT` instead.
 
 ## Safe lifecycle
 
@@ -50,7 +58,7 @@ sandbox delete SANDBOX_ID --wait
 | Product overview and current capability status | <https://tools.yshubham.com/docs/sandbox/overview.md> |
 | Components, trust boundaries, and request flow | <https://tools.yshubham.com/docs/sandbox/architecture.md> |
 | AEGIS risk scoring and placement | <https://tools.yshubham.com/docs/sandbox/aegis.md> |
-| CLI commands and automation output | <https://tools.yshubham.com/docs/sandbox/cli.md> |
+| CLI commands, local HTTP sharing, and automation output | <https://tools.yshubham.com/docs/sandbox/cli.md> |
 | MCP tools, resources, prompts, and client setup | <https://tools.yshubham.com/docs/sandbox/mcp.md> |
 | Dedicated Linux server setup | <https://tools.yshubham.com/docs/sandbox/how-to-setup/server.md> |
 | Workstation, CLI, skill, and MCP client setup | <https://tools.yshubham.com/docs/sandbox/how-to-setup/client.md> |

@@ -1,6 +1,6 @@
 # Sandbox
 
-> Self-hosted Rust control plane for disposable coding environments and coding-agent workloads. These Markdown files are the canonical machine-readable documentation for Sandbox v0.1.2.
+> Self-hosted Rust control plane for disposable coding environments and coding-agent workloads. These Markdown files are the canonical machine-readable documentation for Sandbox v0.1.3.
 
 ## Start here
 
@@ -23,7 +23,7 @@
 
 ## Interfaces
 
-- [CLI reference](https://tools.yshubham.com/docs/sandbox/cli.md): doctor, create, exec, list, inspect, wait, delete, agents, and MCP config
+- [CLI reference](https://tools.yshubham.com/docs/sandbox/cli.md): local HTTP sharing, doctor, create, exec, list, inspect, wait, delete, agents, and MCP config
 - [MCP reference](https://tools.yshubham.com/docs/sandbox/mcp.md): 12 tools, three resources, two prompts, client setup, and result handling
 - [HTTP API](https://tools.yshubham.com/docs/sandbox/api.md): operator and worker endpoints, authentication, idempotency, and bounded execution
 - [Coding agents](https://tools.yshubham.com/docs/sandbox/agents.md): Codex, Claude Code, OpenCode, Pi, Aider, Goose, and CommandCode profiles
