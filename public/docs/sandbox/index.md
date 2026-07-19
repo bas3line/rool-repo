@@ -1,6 +1,6 @@
 # Sandbox documentation
 
-> Canonical agent entry point for Sandbox v0.1.4. Sandbox is a self-hosted Rust control plane for disposable coding environments and coding-agent workloads. Use this index to select the narrowest authoritative reference for the task.
+> Canonical agent entry point for Sandbox v0.1.5. Sandbox is a self-hosted Rust control plane for disposable coding environments and coding-agent workloads. Use this index to select the narrowest authoritative reference for the task.
 
 ## Canonical endpoints
 

@@ -69,7 +69,7 @@ SANDBOX_HTTP_RELAY=https://relay.tunnel.example.com sandbox http 8080
 
 The command checks both local IPv4 and IPv6, connects over one outbound WebSocket, prints a temporary public HTTPS URL, and stays attached until Ctrl-C. The default is the first-party `https://relay.tunnel.yshubham.com` service; it does not invoke `cloudflared`, SSH, localhost.run, or another quick-tunnel domain. Set `SANDBOX_HTTP_RELAY` or pass `--relay` for a self-hosted relay. `SANDBOX_TOKEN` is sent only when that relay requires operator authentication.
 
-HTTP and WebSocket upgrades such as Vite HMR are supported. Sandbox forwards to `127.0.0.1:PORT` without the public Host or Origin, so do not weaken the local server's host allowlist. Ctrl-C, disconnect, controller restart, or relay TTL revokes the exact-host route. Treat the URL as public and never expose credentials, private data, or admin interfaces.
+HTTP and WebSocket upgrades such as Vite HMR are supported. Sandbox detects whether the service is listening on IPv4 (`127.0.0.1`) or IPv6 (`::1`) and forwards to that exact loopback address without the public Host or Origin, so do not weaken the local server's host allowlist. Ctrl-C, disconnect, controller restart, or relay TTL revokes the exact-host route. Treat the URL as public and never expose credentials, private data, or admin interfaces.
 
 For a service inside a managed sandbox, make it listen on `0.0.0.0`, then use the controller-managed tunnel commands:
 
