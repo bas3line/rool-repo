@@ -23,7 +23,7 @@
           <span class="crumb">/ docs / watchman</span>
         </a>
         <div class="header-actions">
-          <span class="status">v0.8.2 verified</span>
+          <span class="status">v0.8.3 verified</span>
           <a class="raw-link" href="/docs/watchman/reference.md">raw .md</a>
         </div>
       </div>
@@ -49,7 +49,7 @@
           </ul>
         </nav>
         <div class="sidebar-meta">
-          watchman 0.8.2<br>
+          watchman 0.8.3<br>
           schema v3<br>
           updated 2026-07-19
         </div>
@@ -61,7 +61,7 @@
           <h1>Watch<em>man.</em></h1>
           <p class="lede">One evidence-first Rust utility for GPU health, VRAM ownership, inference telemetry, capacity planning, canaries, saturation benchmarks, and rollout gates.</p>
           <div class="chips" aria-label="Watchman metadata">
-            <span class="chip"><strong>v0.8.2</strong></span>
+            <span class="chip"><strong>v0.8.3</strong></span>
             <span class="chip">macOS + Linux</span>
             <span class="chip">x86-64 + ARM64</span>
             <span class="chip">agent-ready</span>
@@ -70,7 +70,7 @@
 
         <section class="doc-section" id="install">
           <h2>Install</h2>
-          <p>The hosted installer selects the current platform archive, verifies its checksum and exact member set, checks GitHub artifact provenance when a compatible <code>gh</code> CLI is available, and installs the public binary as <code>watchman</code>.</p>
+          <p>The hosted installer selects the current platform archive, verifies its checksum and exact member set, checks GitHub artifact provenance when a compatible <code>gh</code> CLI is available, and installs the public binary as <code>watchman</code>. Linux packages are static musl executables with no build-runner GLIBC requirement.</p>
           <div class="command">
             <div class="code-label">shell · install release</div>
             <pre><code>curl -fsSL https://tools.yshubham.com/watchman/install.sh | sh
@@ -97,7 +97,7 @@ watchman version</code></pre>
           <h2>Agent protocol</h2>
           <ol class="protocol">
             <li>Run <code>watchman version</code> and <code>watchman --help</code>.</li>
-            <li>Require version <code>0.8.2</code> or newer for this reference; stop and upgrade an older binary.</li>
+            <li>Require version <code>0.8.3</code> or newer for this reference; stop and upgrade an older binary.</li>
             <li>Run <code>watchman &lt;command&gt; --help</code> before composing flags. Never invent an option.</li>
             <li>Choose the narrowest workflow that answers the operator's request.</li>
             <li>Use JSON for one automation artifact and NDJSON for streams, history, or CI.</li>
@@ -297,8 +297,8 @@ watchman capacity \
         </section>
 
         <footer class="doc-footer">
-          <span>last verified against watchman 0.8.2</span>
-          <a href="https://github.com/bas3line/gpu-watchman" target="_blank" rel="noreferrer">source ↗</a>
+          <span>last verified against watchman 0.8.3</span>
+          <a href="https://github.com/bas3line/watchman" target="_blank" rel="noreferrer">source ↗</a>
         </footer>
       </article>
     </main>

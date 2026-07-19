@@ -34,7 +34,7 @@ Update an installed skill:
 
   npx skills update watchman --global --yes
 
-CLI source:   https://github.com/bas3line/gpu-watchman
+CLI source:   https://github.com/bas3line/watchman
 Skill source: https://github.com/bas3line/rool-repo/tree/main/skills/watchman
 
-The hosted CLI and complete agent skill both target Rust Watchman v0.8.2.
+The hosted CLI and complete agent skill both target Rust Watchman v0.8.3.

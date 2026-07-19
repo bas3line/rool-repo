@@ -140,7 +140,7 @@ curl -fsSL https://tools.yshubham.com/watchman/install.sh | sh
 watchman version
 ```
 
-The root `install.sh` remains the canonical Watchman installer for backward compatibility. It requires HTTPS, verifies the release checksum and exact archive member set, and automatically verifies GitHub artifact provenance when a compatible `gh` CLI is available. Set `WATCHMAN_VERIFY_ATTESTATION=required` to make provenance verification mandatory. Watchman release archives retain the internal `gpu-watchman` member and install it as the public `watchman` command.
+The root `install.sh` remains the canonical Watchman installer for backward compatibility. It requires HTTPS, verifies the release checksum and exact archive member set, and automatically verifies GitHub artifact provenance when a compatible `gh` CLI is available. Set `WATCHMAN_VERIFY_ATTESTATION=required` to make provenance verification mandatory. Linux packages are static musl executables without a build-runner GLIBC requirement. Watchman release archives retain the internal `gpu-watchman` member and install it as the public `watchman` command.
 
 ## Local run and verification
 

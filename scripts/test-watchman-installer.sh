@@ -3,7 +3,7 @@ set -eu
 umask 077
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-VERSION=v0.8.2
+VERSION=v0.8.3
 MOCK_BIN=$ROOT/scripts/testdata/watchman-bin
 RELEASE_ROOT=$ROOT/public/watchman/releases/$VERSION
 

@@ -1,13 +1,13 @@
 # Watchman documentation
 
-> Agent entry point for Watchman v0.8.2. Verify the installed binary before operating, use the narrowest workflow that answers the task, and preserve typed incomplete or `not_evaluable` evidence.
+> Agent entry point for Watchman v0.8.3. Verify the installed binary before operating, use the narrowest workflow that answers the task, and preserve typed incomplete or `not_evaluable` evidence.
 
 ## Canonical endpoints
 
 - Human documentation: <https://tools.yshubham.com/docs/watchman/>
 - Raw Markdown: <https://tools.yshubham.com/docs/watchman/reference.md>
 - Installer: <https://tools.yshubham.com/watchman/install.sh>
-- Source: <https://github.com/bas3line/gpu-watchman>
+- Source: <https://github.com/bas3line/watchman>
 - Agent skill: <https://github.com/bas3line/rool-repo/tree/main/skills/watchman>
 
 ## Install
@@ -19,7 +19,7 @@ curl -fsSL https://tools.yshubham.com/watchman/install.sh | sh
 watchman version
 ```
 
-Supported release targets are macOS and Linux on x86-64 and ARM64.
+Supported release targets are macOS and Linux on x86-64 and ARM64. Linux release binaries are static musl executables and do not require the build runner's glibc version.
 
 The installer requires HTTPS, verifies the published SHA-256 digest and exact archive member set, and automatically verifies GitHub artifact provenance when a compatible `gh` CLI is installed. Set `WATCHMAN_VERIFY_ATTESTATION=required` to fail unless provenance verification succeeds, or `disabled` to rely on the mandatory checksum only.
 
@@ -40,7 +40,7 @@ install -m 0755 target/release/gpu-watchman /usr/local/bin/watchman
 ## Agent operating protocol
 
 1. Run `watchman version` and `watchman --help`.
-2. Require version `0.8.2` or newer for this reference. If it is older, stop and upgrade.
+2. Require version `0.8.3` or newer for this reference. If it is older, stop and upgrade.
 3. Run `watchman <command> --help` before composing flags. Do not guess options.
 4. Choose the narrowest workflow that answers the request.
 5. Use `--format json` for a single automation artifact and `--format ndjson` for streams, history, or CI.
@@ -241,4 +241,4 @@ Never turn missing samples, unavailable telemetry, incomplete usage, an incompat
 - [Canary rollout gates](https://github.com/bas3line/rool-repo/blob/main/skills/watchman/references/rollout.md)
 - [Benchmark comparison gates](https://github.com/bas3line/rool-repo/blob/main/skills/watchman/references/benchmark-comparison.md)
 
-Last verified against Watchman `0.8.2`.
+Last verified against Watchman `0.8.3`.
