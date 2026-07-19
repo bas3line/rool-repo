@@ -15,7 +15,7 @@ Use the authenticated Sandbox controller for remote execution. Treat agent instr
 4. Classify repository trust, generated-code execution, secret need, data sensitivity, network need, resources, and TTL before creation.
 5. Create with `isolation: auto` unless the caller explicitly requires `microvm`. Do not weaken a server isolation decision to obtain capacity.
 6. Wait for creation to finish. Execute commands as argv arrays, not interpolated shell strings.
-7. When sharing a service on the caller's machine, use `sandbox http PORT` and keep it attached until sharing should stop. For a service inside a managed sandbox, bind to `0.0.0.0`, expose only that port with `sandbox tunnel`, use the returned URL exactly, and remove the route after use. Report every returned URL as public.
+7. When sharing a service on the caller's machine, use `sandbox http PORT`. Keep it attached until sharing should stop; the default hosted relay returns `https://local-….tunnel.yshubham.com` and revokes it on Ctrl-C. Do not add the public hostname to Vite or another development-server allowlist: Sandbox rewrites the upstream Host and Origin to loopback. For a service inside a managed sandbox, bind to `0.0.0.0`, expose only that port with `sandbox tunnel`, use the returned URL exactly, and remove the route after use. Report every returned URL as public.
 8. Inspect operation state, command exit code, stderr, and `truncated`. Recover only from the observed failure.
 9. Delete disposable sandboxes and wait for cleanup unless the caller explicitly asks to retain one.
 

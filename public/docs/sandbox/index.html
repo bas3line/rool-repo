@@ -24,7 +24,7 @@
           <span class="crumb">/ docs / sandbox</span>
         </a>
         <div class="header-actions">
-          <span class="live-status">v0.1.3 docs</span>
+          <span class="live-status">v0.1.4 docs</span>
           <a class="header-link secondary" href="/docs/sandbox/llms.txt">llms.txt</a>
           <a class="header-link" href="/docs/sandbox/index.md">raw .md</a>
         </div>
@@ -51,7 +51,7 @@
           </ul>
         </nav>
         <div class="sidebar-meta">
-          sandbox 0.1.3<br>
+          sandbox 0.1.4<br>
           rust 1.97.1<br>
           MCP 2025-11-25<br>
           20 raw documents
@@ -64,7 +64,7 @@
           <h1>Sand<em>box.</em></h1>
           <p class="lede">A lean Rust control plane for disposable coding environments and AI agents—with typed lifecycle APIs, AEGIS risk-aware scheduling, Docker and external runtime adapters, durable state, and one tiny remote CLI.</p>
           <div class="chips" aria-label="Sandbox documentation metadata">
-            <span class="chip"><strong>v0.1.3</strong></span>
+            <span class="chip"><strong>v0.1.4</strong></span>
             <span class="chip">Rust</span>
             <span class="chip">self-hosted</span>
             <span class="chip">CLI + MCP + HTTP</span>
@@ -109,7 +109,7 @@ sandbox doctor</code></pre>
 
         <section class="doc-section" id="local-share">
           <h2>Share a local port</h2>
-          <p>Start a frontend or API on the current machine, then publish it at a temporary HTTPS URL. This path does not need <code>sandboxd</code>, <code>SANDBOX_URL</code>, or a remote sandbox. Keep the command attached and press Ctrl-C to revoke the URL.</p>
+          <p>Start a frontend or API on the current machine, then publish it through the first-party relay at a temporary <code>https://local-….tunnel.yshubham.com</code> URL. This path does not need a local <code>sandboxd</code>, <code>SANDBOX_URL</code>, a helper binary, or a remote sandbox. HTTP and WebSocket traffic such as Vite HMR are supported. Keep the command attached and press Ctrl-C to revoke the URL.</p>
           <div class="command">
             <div class="code-label">shell · temporary public preview</div>
             <pre><code>sandbox http 4321</code></pre>
@@ -119,7 +119,7 @@ sandbox doctor</code></pre>
             <strong>public means public</strong>
             <p>Anyone with the generated URL can reach the local service. Do not expose admin panels, credentials, private data, or production control surfaces.</p>
           </div>
-          <p>For a service inside a managed sandbox, bind it to <code>0.0.0.0</code> and use <code>sandbox tunnel create SANDBOX_ID --port PORT</code>. See the <a href="/docs/sandbox/cli.md">CLI reference</a> for provider selection and managed-tunnel commands.</p>
+          <p>The relay rewrites the upstream Host and Origin to loopback, so do not weaken Vite's <code>allowedHosts</code>. For a service inside a managed sandbox, bind it to <code>0.0.0.0</code> and use <code>sandbox tunnel create SANDBOX_ID --port PORT</code>. See the <a href="/docs/sandbox/cli.md">CLI reference</a> for relay overrides and managed-tunnel commands.</p>
         </section>
 
         <section class="doc-section" id="lifecycle">
@@ -310,7 +310,7 @@ docker compose -f deploy/compose/compose.yaml up --build</code></pre>
         </section>
 
         <footer class="doc-footer">
-          <span>Sandbox v0.1.3 · documentation mirror</span>
+          <span>Sandbox v0.1.4 · documentation mirror</span>
           <a href="/">tools.yshubham.com ↗</a>
         </footer>
       </article>

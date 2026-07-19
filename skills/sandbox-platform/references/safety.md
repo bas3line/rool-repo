@@ -29,7 +29,9 @@ Keep destructive production operations outside a general coding sandbox. Route t
 
 ## Public exposure
 
-Every tunnel URL is Internet-facing even when its subdomain is difficult to guess. Expose only an intended HTTP/WebSocket service, make it listen on `0.0.0.0`, and remove the tunnel as soon as it is no longer needed. Never publish databases, Docker APIs, debug consoles, credential-bearing admin interfaces, or services processing confidential/restricted data. Tunnel authentication is rejected until the deployment has a real identity-aware proxy; a URL is not an access-control mechanism.
+Every tunnel URL is Internet-facing even when its subdomain is difficult to guess. Expose only an intended HTTP/WebSocket service and remove the tunnel as soon as it is no longer needed. A local `sandbox http PORT` relay targets loopback; do not add its public hostname to Vite or another development-server allowlist. A managed sandbox service must listen on `0.0.0.0`. Never publish databases, Docker APIs, debug consoles, credential-bearing admin interfaces, or services processing confidential/restricted data. Tunnel authentication is rejected until the deployment has a real identity-aware proxy; a URL is not an access-control mechanism.
+
+The hosted local relay applies session, body-size, and TTL limits and revokes the edge route on disconnect. Those controls are not visitor authentication or a durable distributed abuse boundary. A self-hosted private relay should require the operator token; an intentionally anonymous relay belongs behind provider WAF and rate controls.
 
 When an operator requires a hidden origin, prefer an outbound connector such as the documented Cloudflare Tunnel overlay and close public origin ingress only after end-to-end verification. Orange-cloud DNS by itself does not prevent direct-origin bypass. A nested Cloudflare wildcard needs an edge certificate that explicitly covers that wildcard depth.
 

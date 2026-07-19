@@ -25,13 +25,15 @@ curl -fsSL https://tools.yshubham.com/sandbox/install.sh | sh
 sandbox --help
 ```
 
-The current v0.1.3 registry release includes macOS ARM64 and Linux x86-64 archives. The Sandbox release workflow is ready to add macOS x86-64 and Linux ARM64 without changing the installer. Release binaries bundle `libpq` and vendored OpenSSL, avoiding machine-specific PostgreSQL client paths.
+The current v0.1.4 registry release includes macOS ARM64 and Linux x86-64 archives. The Sandbox release workflow is ready to add macOS x86-64 and Linux ARM64 without changing the installer. Release binaries bundle `libpq` and vendored OpenSSL, avoiding machine-specific PostgreSQL client paths.
 
 Share a local frontend or API without running a Sandbox controller:
 
 ```sh
 sandbox http 4321
 ```
+
+The hosted first-party relay returns a temporary `https://local-….tunnel.yshubham.com` URL with HTTP, WebSocket, and Vite HMR support. Ctrl-C revokes the exact-host route.
 
 Both commands are safe to rerun. The installer verifies the requested archive and embedded binary versions, stages all three binaries in the destination filesystem, and atomically replaces each existing command instead of leaving an older installation untouched.
 
@@ -129,7 +131,7 @@ Example from a Sandbox source checkout:
 
 ```sh
 cargo build --profile dist --locked --package sandbox-cli --package sandboxd --package sandbox-mcp
-version=v0.1.3
+version=v0.1.4
 os=darwin
 arch=arm64
 archive="sandbox_${version}_${os}_${arch}.tar.gz"

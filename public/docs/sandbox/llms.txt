@@ -1,6 +1,6 @@
 # Sandbox
 
-> Self-hosted Rust control plane for disposable coding environments and coding-agent workloads. These Markdown files are the canonical machine-readable documentation for Sandbox v0.1.3.
+> Self-hosted Rust control plane for disposable coding environments and coding-agent workloads. These Markdown files are the canonical machine-readable documentation for Sandbox v0.1.4.
 
 ## Start here
 

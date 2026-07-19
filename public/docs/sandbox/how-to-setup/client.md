@@ -6,8 +6,6 @@ The workstation needs only `sandbox`, `sandbox-mcp`, the Sandbox skill, the cont
 
 The one-command setup installs the binaries, installs the cross-agent skill, and registers `sandbox-mcp` with detected Codex, Claude Code, and Gemini CLIs. It also publishes templates for OpenCode, Cursor, VS Code, Goose, Claude Desktop, Windsurf, Cline, Roo Code, and generic MCP clients.
 
-Rerun the same command to upgrade an existing workstation. The installer verifies the checksum and embedded versions, stages all three binaries, replaces the installed commands, and preserves existing MCP entries.
-
 ```sh
 curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh
 ```
@@ -41,6 +39,14 @@ sandbox agent list
 ```
 
 `sandbox doctor` must report the expected controller version and tunnel configuration before an agent creates resources.
+
+To share a service already running on the workstation, no managed sandbox is needed:
+
+```sh
+sandbox http 4321
+```
+
+The public URL uses the hosted `*.tunnel.yshubham.com` wildcard by default. A self-hosted installation sets `SANDBOX_HTTP_RELAY=https://relay.tunnel.example.com`. Ctrl-C revokes the route.
 
 ## 4. Register MCP clients
 

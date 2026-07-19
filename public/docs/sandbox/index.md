@@ -1,6 +1,6 @@
 # Sandbox documentation
 
-> Canonical agent entry point for Sandbox v0.1.3. Sandbox is a self-hosted Rust control plane for disposable coding environments and coding-agent workloads. Use this index to select the narrowest authoritative reference for the task.
+> Canonical agent entry point for Sandbox v0.1.4. Sandbox is a self-hosted Rust control plane for disposable coding environments and coding-agent workloads. Use this index to select the narrowest authoritative reference for the task.
 
 ## Canonical endpoints
 
@@ -31,7 +31,7 @@ The setup installs or upgrades `sandbox`, `sandboxd`, `sandbox-mcp`, and the cro
 sandbox http 4321
 ```
 
-This command requires only a listening local port. It prints a temporary public HTTPS URL and remains attached until Ctrl-C. It does not contact `SANDBOX_URL`. Treat the URL as public. For services inside a managed sandbox, use `sandbox tunnel create SANDBOX_ID --port PORT` instead.
+This command requires only a listening local port. It uses the first-party hosted relay at `relay.tunnel.yshubham.com`, prints a temporary `https://local-….tunnel.yshubham.com` URL, supports HTTP and WebSocket traffic such as Vite HMR, and remains attached until Ctrl-C. Treat the URL as public. For services inside a managed sandbox, use `sandbox tunnel create SANDBOX_ID --port PORT` instead.
 
 ## Safe lifecycle
 
