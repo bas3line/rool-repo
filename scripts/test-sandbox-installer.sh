@@ -3,7 +3,7 @@
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-VERSION=v0.1.0
+VERSION=$(tr -d '\r\n' < "$ROOT/public/sandbox/latest")
 os=$(uname -s | tr '[:upper:]' '[:lower:]')
 arch=$(uname -m)
 case "$arch" in
@@ -26,12 +26,25 @@ chmod 0755 "$temporary/bin/curl"
 
 export SANDBOX_TEST_VERSION=$VERSION
 export SANDBOX_TEST_FIXTURE=$fixture
+for binary in sandbox sandboxd sandbox-mcp; do
+  printf '%s\n' '#!/bin/sh' "printf '%s\\n' '$binary 0.0.0'" > "$temporary/install/$binary"
+  chmod 0755 "$temporary/install/$binary"
+done
 PATH="$temporary/bin:/usr/bin:/bin:/usr/sbin:/sbin" \
 SANDBOX_INSTALL_BASE_URL=https://tools.test \
 SANDBOX_INSTALL_DIR="$temporary/install" \
-/bin/sh "$ROOT/public/sandbox/install.sh"
+/bin/sh "$ROOT/public/sandbox/install.sh" > "$temporary/update.log"
+
+grep -F "Updating Sandbox from 0.0.0 to $VERSION" "$temporary/update.log" >/dev/null
 
 "$temporary/install/sandbox" --version
 "$temporary/install/sandbox-mcp" --version
 "$temporary/install/sandboxd" --version
+
+PATH="$temporary/bin:/usr/bin:/bin:/usr/sbin:/sbin" \
+SANDBOX_INSTALL_BASE_URL=https://tools.test \
+SANDBOX_INSTALL_DIR="$temporary/install" \
+/bin/sh "$ROOT/public/sandbox/install.sh" > "$temporary/refresh.log"
+
+grep -F "Refreshing Sandbox $VERSION" "$temporary/refresh.log" >/dev/null
 printf '%s\n' "Sandbox installer integration test passed for $os/$arch"

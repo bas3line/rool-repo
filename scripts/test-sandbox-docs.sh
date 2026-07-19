@@ -17,7 +17,8 @@ done
 for file in \
   index.html index.md llms.txt overview.md architecture.md aegis.md cli.md mcp.md \
   api.md agents.md configuration.md deployment.md operations.md security.md \
-  runtime-driver.md development.md roadmap.md reporting.md
+  runtime-driver.md development.md roadmap.md reporting.md tunnels.md \
+  how-to-setup/server.md how-to-setup/client.md how-to-setup/custom-public-domains.md
 do
   [ -s "$DOCS/$file" ] || {
     printf '%s\n' "missing or empty Sandbox documentation file: $file" >&2
@@ -27,10 +28,13 @@ done
 
 grep -F 'href="/docs/sandbox/index.md"' "$DOCS/index.html" >/dev/null
 grep -F 'href="/docs/sandbox/llms.txt"' "$DOCS/index.html" >/dev/null
-grep -F 'href="/theme.css?v=20260719"' "$DOCS/index.html" >/dev/null
-grep -F 'href="/docs/docs.css?v=20260719"' "$DOCS/index.html" >/dev/null
-grep -F 'src="/docs/docs.js?v=20260719"' "$DOCS/index.html" >/dev/null
+grep -F 'href="/theme.css?v=20260719-1"' "$DOCS/index.html" >/dev/null
+grep -F 'href="/docs/docs.css?v=20260719-1"' "$DOCS/index.html" >/dev/null
+grep -F 'src="/docs/docs.js?v=20260719-1"' "$DOCS/index.html" >/dev/null
 grep -F 'https://tools.yshubham.com/docs/sandbox/mcp.md' "$DOCS/index.md" >/dev/null
+grep -F 'https://tools.yshubham.com/docs/sandbox/how-to-setup/server.md' "$DOCS/index.md" >/dev/null
+grep -F 'href="/docs/sandbox/how-to-setup/custom-public-domains.md"' "$DOCS/index.html" >/dev/null
+grep -F '<strong>12 tools</strong>' "$DOCS/index.html" >/dev/null
 grep -F 'https://tools.yshubham.com/docs/sandbox/security.md' "$DOCS/llms.txt" >/dev/null
 grep -F 'href="/docs/sandbox/"' "$ROOT/public/index.html" >/dev/null
 
@@ -42,14 +46,14 @@ grep -F 'href="/docs/sandbox/"' "$ROOT/public/index.html" >/dev/null
   printf '%s\n' 'missing or empty Watchman raw Markdown reference' >&2
   exit 1
 }
-grep -F 'href="/theme.css?v=20260719"' "$WATCHMAN_DOCS/index.html" >/dev/null
-grep -F 'href="/docs/docs.css?v=20260719"' "$WATCHMAN_DOCS/index.html" >/dev/null
-grep -F 'src="/docs/docs.js?v=20260719"' "$WATCHMAN_DOCS/index.html" >/dev/null
+grep -F 'href="/theme.css?v=20260719-1"' "$WATCHMAN_DOCS/index.html" >/dev/null
+grep -F 'href="/docs/docs.css?v=20260719-1"' "$WATCHMAN_DOCS/index.html" >/dev/null
+grep -F 'src="/docs/docs.js?v=20260719-1"' "$WATCHMAN_DOCS/index.html" >/dev/null
 grep -F 'href="/docs/watchman/reference.md"' "$WATCHMAN_DOCS/index.html" >/dev/null
 
-grep -F 'href="/theme.css?v=20260719"' "$ROOT/public/index.html" >/dev/null
-grep -F 'href="/tools.css?v=20260719"' "$ROOT/public/index.html" >/dev/null
-grep -F 'src="/tools.js?v=20260719"' "$ROOT/public/index.html" >/dev/null
+grep -F 'href="/theme.css?v=20260719-1"' "$ROOT/public/index.html" >/dev/null
+grep -F 'href="/tools.css?v=20260719-1"' "$ROOT/public/index.html" >/dev/null
+grep -F 'src="/tools.js?v=20260719-1"' "$ROOT/public/index.html" >/dev/null
 grep -F 'Codex' "$ROOT/public/index.html" >/dev/null
 grep -F 'Claude Code' "$ROOT/public/index.html" >/dev/null
 grep -F 'OpenCode' "$ROOT/public/index.html" >/dev/null

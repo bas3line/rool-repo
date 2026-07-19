@@ -1,6 +1,6 @@
 # Sandbox documentation
 
-> Canonical agent entry point for Sandbox v0.1.0. Sandbox is a self-hosted Rust control plane for disposable coding environments and coding-agent workloads. Use this index to select the narrowest authoritative reference for the task.
+> Canonical agent entry point for Sandbox v0.1.1. Sandbox is a self-hosted Rust control plane for disposable coding environments and coding-agent workloads. Use this index to select the narrowest authoritative reference for the task.
 
 ## Canonical endpoints
 
@@ -8,6 +8,9 @@
 - Agent documentation index: <https://tools.yshubham.com/docs/sandbox/index.md>
 - LLM discovery index: <https://tools.yshubham.com/docs/sandbox/llms.txt>
 - One-command workstation setup: <https://tools.yshubham.com/sandbox/setup.sh>
+- Server setup: <https://tools.yshubham.com/docs/sandbox/how-to-setup/server.md>
+- Client PC setup: <https://tools.yshubham.com/docs/sandbox/how-to-setup/client.md>
+- Custom public domains: <https://tools.yshubham.com/docs/sandbox/how-to-setup/custom-public-domains.md>
 - MCP client guide: <https://tools.yshubham.com/sandbox/clients/index.md>
 - Agent skill: <https://github.com/bas3line/rool-repo/tree/main/skills/sandbox-platform>
 
@@ -20,7 +23,7 @@ export SANDBOX_TOKEN='read-from-your-secret-store'
 sandbox doctor
 ```
 
-The setup installs `sandbox`, `sandboxd`, `sandbox-mcp`, and the cross-agent skill. It registers detected Codex, Claude Code, and Gemini CLIs without writing `SANDBOX_TOKEN` into their configuration.
+The setup installs or upgrades `sandbox`, `sandboxd`, `sandbox-mcp`, and the cross-agent skill. It registers detected Codex, Claude Code, and Gemini CLIs without writing `SANDBOX_TOKEN` into their configuration. Rerunning it verifies and replaces existing binaries while preserving existing MCP entries.
 
 ## Safe lifecycle
 
@@ -49,6 +52,10 @@ sandbox delete SANDBOX_ID --wait
 | AEGIS risk scoring and placement | <https://tools.yshubham.com/docs/sandbox/aegis.md> |
 | CLI commands and automation output | <https://tools.yshubham.com/docs/sandbox/cli.md> |
 | MCP tools, resources, prompts, and client setup | <https://tools.yshubham.com/docs/sandbox/mcp.md> |
+| Dedicated Linux server setup | <https://tools.yshubham.com/docs/sandbox/how-to-setup/server.md> |
+| Workstation, CLI, skill, and MCP client setup | <https://tools.yshubham.com/docs/sandbox/how-to-setup/client.md> |
+| Wildcard DNS, custom HTTPS domains, and Cloudflare Full (strict) | <https://tools.yshubham.com/docs/sandbox/how-to-setup/custom-public-domains.md> |
+| HTTP/WebSocket tunnel routing and lifecycle | <https://tools.yshubham.com/docs/sandbox/tunnels.md> |
 | Coding-agent profiles and image strategy | <https://tools.yshubham.com/docs/sandbox/agents.md> |
 | HTTP routes and authentication boundaries | <https://tools.yshubham.com/docs/sandbox/api.md> |
 | `sandbox.toml` and environment configuration | <https://tools.yshubham.com/docs/sandbox/configuration.md> |
@@ -62,7 +69,9 @@ sandbox delete SANDBOX_ID --wait
 
 ## MCP surface
 
-`sandbox-mcp` speaks MCP `2025-11-25` over stdio. It exposes 10 lifecycle tools, three static resources, and two workflow prompts. Prefer MCP when the host supports it; otherwise use the CLI with the same lifecycle and safety rules.
+`sandbox-mcp` speaks MCP `2025-11-25` over stdio. It exposes 12 lifecycle tools, three static resources, and two workflow prompts. Prefer MCP when the host supports it; otherwise use the CLI with the same lifecycle and safety rules.
+
+Public domains, certificates, and TLS modes are server-side deployment settings. MCP clients must use a returned tunnel URL exactly as provided and must treat any `http://` result as transport-insecure.
 
 Supported setup paths include Codex, Claude Code, Gemini CLI, OpenCode, Cursor, VS Code/Copilot, Windsurf, Cline, Roo Code, Claude Desktop, Gemini Code Assist, Goose, and generic MCP hosts. Pi, Aider, CommandCode, and hosts without native MCP use the CLI and skill.
 

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Sandbox v0.1 documentation for self-hosted disposable coding environments, coding agents, AEGIS scheduling, CLI, MCP, deployment, and operations.">
+    <meta name="description" content="Sandbox v0.1 documentation for self-hosted disposable coding environments, coding agents, AEGIS scheduling, CLI, MCP, server and client setup, custom HTTPS domains, deployment, and operations.">
     <meta name="theme-color" content="#181818">
     <meta name="color-scheme" content="dark">
     <link rel="alternate" type="text/markdown" href="/docs/sandbox/index.md" title="Sandbox agent documentation index">
@@ -24,7 +24,7 @@
           <span class="crumb">/ docs / sandbox</span>
         </a>
         <div class="header-actions">
-          <span class="live-status">v0.1.0 docs</span>
+          <span class="live-status">v0.1.1 docs</span>
           <a class="header-link secondary" href="/docs/sandbox/llms.txt">llms.txt</a>
           <a class="header-link" href="/docs/sandbox/index.md">raw .md</a>
         </div>
@@ -50,10 +50,10 @@
           </ul>
         </nav>
         <div class="sidebar-meta">
-          sandbox 0.1.0<br>
+          sandbox 0.1.1<br>
           rust 1.97.1<br>
           MCP 2025-11-25<br>
-          17 raw documents
+          20 raw documents
         </div>
       </aside>
 
@@ -63,7 +63,7 @@
           <h1>Sand<em>box.</em></h1>
           <p class="lede">A lean Rust control plane for disposable coding environments and AI agents—with typed lifecycle APIs, AEGIS risk-aware scheduling, Docker and external runtime adapters, durable state, and one tiny remote CLI.</p>
           <div class="chips" aria-label="Sandbox documentation metadata">
-            <span class="chip"><strong>v0.1.0</strong></span>
+            <span class="chip"><strong>v0.1.1</strong></span>
             <span class="chip">Rust</span>
             <span class="chip">self-hosted</span>
             <span class="chip">CLI + MCP + HTTP</span>
@@ -79,7 +79,7 @@
 
         <section class="doc-section" id="quickstart">
           <h2>Quickstart</h2>
-          <p>Install the three binaries, the cross-agent skill, and detected MCP client entries in one command. The setup script verifies the release checksum and never writes <code>SANDBOX_TOKEN</code> into agent configuration.</p>
+          <p>Install or upgrade the three binaries, the cross-agent skill, and detected MCP client entries in one command. Reruns verify the archive and embedded versions, replace existing binaries, preserve existing MCP entries, and never write <code>SANDBOX_TOKEN</code> into agent configuration.</p>
           <div class="command">
             <div class="code-label">shell · workstation setup</div>
             <pre><code>curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh
@@ -98,6 +98,11 @@ sandbox doctor</code></pre>
           <div class="callout agent">
             <strong>agent entry point</strong>
             <p>Agents should begin at <a href="/docs/sandbox/index.md"><code>/docs/sandbox/index.md</code></a> or discover the complete reference set through <a href="/docs/sandbox/llms.txt"><code>/docs/sandbox/llms.txt</code></a>.</p>
+          </div>
+          <div class="path-grid">
+            <a class="path-card" href="/docs/sandbox/how-to-setup/server.md"><span class="micro-label">server</span><strong>Deploy Sandbox</strong><span>Controller, PostgreSQL, dedicated Docker worker, secrets, health, and lifecycle verification.</span></a>
+            <a class="path-card" href="/docs/sandbox/how-to-setup/client.md"><span class="micro-label">client PC</span><strong>Connect every agent</strong><span>CLI, MCP bridge, cross-agent skill, native clients, templates, and protocol checks.</span></a>
+            <a class="path-card" href="/docs/sandbox/how-to-setup/custom-public-domains.md"><span class="micro-label">domains</span><strong>Publish HTTPS safely</strong><span>Wildcard DNS, Advanced certificates, Origin CA, Full (strict), and hidden-origin Cloudflare Tunnel.</span></a>
           </div>
         </section>
 
@@ -173,7 +178,7 @@ sandbox delete SANDBOX_ID --wait</code></pre>
             </table>
           </div>
           <h3>MCP surface</h3>
-          <p>The Rust stdio bridge publishes <strong>10 tools</strong>, <strong>3 resources</strong>, and <strong>2 prompts</strong> with closed JSON schemas, structured results, explicit error semantics, and annotations for read-only, destructive, idempotent, and open-world behavior.</p>
+          <p>The Rust stdio bridge publishes <strong>12 tools</strong>, <strong>3 resources</strong>, and <strong>2 prompts</strong> with closed JSON schemas, structured results, explicit error semantics, and annotations for read-only, destructive, idempotent, and open-world behavior.</p>
           <div class="command">
             <div class="code-label">shell · major MCP CLIs</div>
             <pre><code>codex mcp add sandbox -- sandbox-mcp
@@ -218,6 +223,8 @@ docker compose -f deploy/compose/compose.yaml up --build</code></pre>
             <button class="copy-button" type="button" data-copy="export SANDBOX_API_TOKEN=&quot;$(openssl rand -hex 32)&quot;&#10;export SANDBOX_NODE_TOKEN=&quot;$(openssl rand -hex 32)&quot;&#10;docker compose -f deploy/compose/compose.yaml up --build" aria-label="Copy Sandbox developer deployment">copy</button>
           </div>
           <div class="path-grid">
+            <a class="path-card" href="/docs/sandbox/how-to-setup/server.md"><span class="micro-label">start here</span><strong>Server setup</strong><span>Durable Compose deployment, secret separation, health, lifecycle checks, and operating baseline.</span></a>
+            <a class="path-card" href="/docs/sandbox/how-to-setup/custom-public-domains.md"><span class="micro-label">HTTPS ingress</span><strong>Custom public domains</strong><span>Direct edge, Cloudflare Full (strict), Origin CA, or an outbound connector with no public origin listener.</span></a>
             <a class="path-card" href="/docs/sandbox/deployment.md"><span class="micro-label">deployment</span><strong>Compose → systemd → Kubernetes</strong><span>Topology, reverse proxy, release verification, upgrades, scaling, and backup expectations.</span></a>
             <a class="path-card" href="/docs/sandbox/configuration.md"><span class="micro-label">configuration</span><strong>One typed configuration surface</strong><span>Server, state, bus, policy, node, runtime, observability, and environment overrides.</span></a>
           </div>
@@ -264,7 +271,11 @@ docker compose -f deploy/compose/compose.yaml up --build</code></pre>
             <a class="reference-card" href="/docs/sandbox/architecture.md"><strong>Architecture</strong><span>Components, trust boundaries, request flow, failure handling, and scaling.</span></a>
             <a class="reference-card" href="/docs/sandbox/aegis.md"><strong>AEGIS</strong><span>Risk weights, isolation floor, filters, ranking, and determinism.</span></a>
             <a class="reference-card" href="/docs/sandbox/cli.md"><strong>CLI</strong><span>Connection, lifecycle, agent profiles, waiting, JSON, and MCP config.</span></a>
-            <a class="reference-card" href="/docs/sandbox/mcp.md"><strong>MCP</strong><span>Major clients, 10 tools, resources, prompts, errors, and testing.</span></a>
+            <a class="reference-card" href="/docs/sandbox/mcp.md"><strong>MCP</strong><span>Major clients, 12 tools, resources, prompts, errors, and testing.</span></a>
+            <a class="reference-card" href="/docs/sandbox/how-to-setup/server.md"><strong>Server setup</strong><span>Dedicated Linux host, Compose, secrets, health, lifecycle test, and operating checklist.</span></a>
+            <a class="reference-card" href="/docs/sandbox/how-to-setup/client.md"><strong>Client PC setup</strong><span>One-command install, secret-safe connection, MCP clients, and cleanup test.</span></a>
+            <a class="reference-card" href="/docs/sandbox/how-to-setup/custom-public-domains.md"><strong>Custom public domains</strong><span>Wildcard DNS, Cloudflare certificates, Full (strict), direct edge, and hidden origin.</span></a>
+            <a class="reference-card" href="/docs/sandbox/tunnels.md"><strong>Public tunnels</strong><span>Per-sandbox networks, exact-host routes, custom HTTPS domains, and cleanup behavior.</span></a>
             <a class="reference-card" href="/docs/sandbox/api.md"><strong>HTTP API</strong><span>Operator and worker routes, auth, idempotency, and execution limits.</span></a>
             <a class="reference-card" href="/docs/sandbox/agents.md"><strong>Coding agents</strong><span>Profiles, images, credentials, customization, and version policy.</span></a>
             <a class="reference-card" href="/docs/sandbox/configuration.md"><strong>Configuration</strong><span>Typed TOML keys, environment overrides, policy, state, and runtime.</span></a>
@@ -283,7 +294,7 @@ docker compose -f deploy/compose/compose.yaml up --build</code></pre>
         </section>
 
         <footer class="doc-footer">
-          <span>Sandbox v0.1.0 · documentation mirror</span>
+          <span>Sandbox v0.1.1 · documentation mirror</span>
           <a href="/">tools.yshubham.com ↗</a>
         </footer>
       </article>

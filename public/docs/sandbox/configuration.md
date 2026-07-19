@@ -9,7 +9,7 @@ SANDBOX__STORE__DATABASE_URL=postgres://...
 SANDBOX__NODE__RUNTIME=external
 ```
 
-Never commit token or database credential values. A reviewed non-secret example is in [`config/sandbox.example.toml`](https://github.com/bas3line/sandbox/blob/main/config/sandbox.example.toml).
+Never commit token or database credential values. A reviewed non-secret example is in [config/sandbox.example.toml](../config/sandbox.example.toml).
 
 ## Server
 
@@ -69,3 +69,17 @@ Changing the microVM threshold is a security-policy change. Review it like a fir
 | `node.labels` | empty | Hard placement labels |
 
 Advertise allocatable capacity after system and runtime reserves, not raw host capacity.
+
+## Public tunnels
+
+Tunnels are disabled by default. Both controller and workers need the same `tunnel.base_domain` and `tunnel.public_scheme`; Docker workers also reconcile the edge route directory and private per-sandbox networks.
+
+```text
+SANDBOX__TUNNEL__ENABLED=true
+SANDBOX__TUNNEL__BASE_DOMAIN=tunnel.example.com
+SANDBOX__TUNNEL__PUBLIC_SCHEME=https
+```
+
+See [tunnels.md](tunnels.md) for every key, wildcard DNS, direct Traefik, Caddy on-demand TLS, proxied Cloudflare Full (strict), outbound Cloudflare Tunnel ingress, lifecycle behavior, and troubleshooting. The task-oriented [custom public domains guide](how-to-setup/custom-public-domains.md) includes the complete certificate and verification flow. `SANDBOX_PORT=127.0.0.1:8080` limits the optional Compose host port to loopback when a private connector is the only ingress path.
+
+Keep `tunnel.public_scheme = "https"` for normal deployments. Set it to `http` only for the documented fixed-proxied-wildcard compatibility mode, and pair it with an HTTP edge entrypoint and disabled edge TLS so returned URLs match reality.

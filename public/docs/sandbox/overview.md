@@ -13,7 +13,7 @@
 
 **A self-hosted Rust control plane for disposable coding environments and AI agents.**
 
-[Architecture](architecture.md) · [Security](security.md) · [Deploy](deployment.md) · [CLI](cli.md) · [MCP](mcp.md)
+[Architecture](architecture.md) · [Security](security.md) · [Server setup](how-to-setup/server.md) · [Client setup](how-to-setup/client.md) · [Custom domains](how-to-setup/custom-public-domains.md) · [CLI](cli.md) · [MCP](mcp.md)
 
 </div>
 
@@ -42,7 +42,7 @@ export SANDBOX_TOKEN='read-from-your-secret-store'
 sandbox doctor
 ```
 
-See [MCP setup](mcp.md), [deployment](deployment.md), and the registry-hosted [`sandbox-platform` skill](https://github.com/bas3line/rool-repo/tree/main/skills/sandbox-platform).
+See [server setup](how-to-setup/server.md), [client setup](how-to-setup/client.md), [custom public domains](how-to-setup/custom-public-domains.md), [MCP setup](mcp.md), and the registry-hosted [`sandbox-platform` skill](https://github.com/bas3line/rool-repo/tree/main/skills/sandbox-platform).
 
 Hosted documentation is available as a [human portal](https://tools.yshubham.com/docs/sandbox/), a raw [agent index](https://tools.yshubham.com/docs/sandbox/index.md), and an [`llms.txt`](https://tools.yshubham.com/docs/sandbox/llms.txt) discovery file.
 
@@ -62,6 +62,7 @@ sandbox create --tenant platform --image ubuntu:24.04 \
   --network restricted --untrusted-repo --generated-code
 
 sandbox exec 019f... -- cargo test --workspace
+sandbox tunnel create 019f... --port 3000
 sandbox agent run codex --tenant platform
 sandbox delete 019f... --wait
 ```
@@ -78,9 +79,10 @@ sandbox delete 019f... --wait
 | NATS lifecycle events + zero-service in-memory bus | Implemented |
 | CLI lifecycle, agent profiles, JSON output, bounded exec | Implemented |
 | MCP 2025-11-25 stdio server with structured tool results | Implemented |
+| Wildcard HTTP/WebSocket tunnels with per-sandbox edge networks | Implemented; custom HTTPS domains, direct edge, and Cloudflare ingress documented |
 | Codex, Claude Code, OpenCode, Pi image builder | Implemented with pinned versions |
 | Aider and Goose profiles | Implemented using their official images |
-| OIDC/SAML, tenant RBAC, secret broker, interactive PTY, live port tunnels | Design boundary; not implemented in v0.1 |
+| OIDC/SAML, tenant RBAC, secret broker, interactive PTY, raw TCP tunnels | Design boundary; not implemented in v0.1 |
 
 This repository is an engineering foundation, not a magic claim that Docker equals a hardened multi-tenant VM. Read the [security model](security.md) before exposing it to hostile tenants.
 
@@ -91,7 +93,7 @@ AEGIS—**Adaptive Execution Guard and Isolation Scheduler**—does two jobs in 
 1. Scores workload risk from data sensitivity, network access, repository trust, generated-code execution, secret use, host mounts, exposure, privilege, and lifetime.
 2. Chooses the minimum isolation tier, hard-filters unsafe nodes, then ranks survivors using dominant-resource headroom, fragmentation, host pressure, image warmth, region locality, and bin-packing efficiency.
 
-A high-risk request cannot downgrade itself to a container. If no compatible microVM worker exists, the request fails with `no_capacity`; it never silently weakens isolation. See [aegis.md](aegis.md).
+A high-risk request cannot downgrade itself to a container. If no compatible microVM worker exists, the request fails with `no_capacity`; it never silently weakens isolation. See [docs/aegis.md](aegis.md).
 
 ## The shape
 
@@ -107,6 +109,7 @@ flowchart LR
     G --> W1["sandboxd worker: Docker"]
     G --> W2["sandboxd worker: external driver"]
     W1 --> X["Hardened containers"]
+    W1 --> T["Private tunnel networks + HTTP edge"]
     W2 --> V["Firecracker / Kata / gVisor / private VMM"]
 ```
 
@@ -133,6 +136,8 @@ cargo run --package sandbox-cli -- create --tenant dev --image ubuntu:24.04 --tt
 
 The Compose stack intentionally sets the microVM threshold above the score range so it can run on a normal Docker laptop. That is a developer convenience, not the production policy. Production keeps the default threshold of `55` and supplies compatible workers.
 
+To publish sandbox services, configure wildcard DNS and enable an edge profile. Direct Traefik, Caddy, proxied Cloudflare with Origin CA and Full (strict), an outbound-only Cloudflare Tunnel overlay, and a clearly marked HTTP compatibility mode are documented in [docs/tunnels.md](tunnels.md). Follow the [custom-domain setup](how-to-setup/custom-public-domains.md) for the complete path. The outbound Cloudflare option keeps the origin off public ingress; real deployment domains, connector tokens, addresses, and certificate material belong in the environment or secret store, never the repository.
+
 ## Coding agents
 
 Pinned image builders are included for:
@@ -145,7 +150,7 @@ Pinned image builders are included for:
 sandbox agent list
 ```
 
-Agent credentials do not belong in command arguments, labels, or plaintext API fields. Connect the external runtime driver to Vault, AWS Secrets Manager, GCP Secret Manager, or your existing workload-identity broker. See [agents.md](agents.md).
+Agent credentials do not belong in command arguments, labels, or plaintext API fields. Connect the external runtime driver to Vault, AWS Secrets Manager, GCP Secret Manager, or your existing workload-identity broker. See [docs/agents.md](agents.md).
 
 ## Repository map
 

@@ -1,12 +1,18 @@
 # Sandbox
 
-> Self-hosted Rust control plane for disposable coding environments and coding-agent workloads. These Markdown files are the canonical machine-readable documentation for Sandbox v0.1.0.
+> Self-hosted Rust control plane for disposable coding environments and coding-agent workloads. These Markdown files are the canonical machine-readable documentation for Sandbox v0.1.1.
 
 ## Start here
 
 - [Agent documentation index](https://tools.yshubham.com/docs/sandbox/index.md): install, safe lifecycle, reference routing, MCP surface, and security invariants
 - [Product overview](https://tools.yshubham.com/docs/sandbox/overview.md): capabilities, status, architecture summary, repository map, and project intent
 - [Human documentation portal](https://tools.yshubham.com/docs/sandbox/): rendered Markdown-style documentation and reference navigation
+
+## Setup guides
+
+- [Server setup](https://tools.yshubham.com/docs/sandbox/how-to-setup/server.md): deploy the controller, PostgreSQL, and a dedicated Docker worker
+- [Client PC setup](https://tools.yshubham.com/docs/sandbox/how-to-setup/client.md): install the CLI, MCP bridge, cross-agent skill, and client integrations
+- [Custom public domains](https://tools.yshubham.com/docs/sandbox/how-to-setup/custom-public-domains.md): wildcard DNS, Cloudflare Advanced certificates, Origin CA, Full (strict), and hidden-origin ingress
 
 ## Core concepts
 
@@ -18,7 +24,7 @@
 ## Interfaces
 
 - [CLI reference](https://tools.yshubham.com/docs/sandbox/cli.md): doctor, create, exec, list, inspect, wait, delete, agents, and MCP config
-- [MCP reference](https://tools.yshubham.com/docs/sandbox/mcp.md): 10 tools, three resources, two prompts, client setup, and result handling
+- [MCP reference](https://tools.yshubham.com/docs/sandbox/mcp.md): 12 tools, three resources, two prompts, client setup, and result handling
 - [HTTP API](https://tools.yshubham.com/docs/sandbox/api.md): operator and worker endpoints, authentication, idempotency, and bounded execution
 - [Coding agents](https://tools.yshubham.com/docs/sandbox/agents.md): Codex, Claude Code, OpenCode, Pi, Aider, Goose, and CommandCode profiles
 
@@ -26,6 +32,7 @@
 
 - [Configuration](https://tools.yshubham.com/docs/sandbox/configuration.md): server, store, bus, policy, node, observability, and environment overrides
 - [Deployment](https://tools.yshubham.com/docs/sandbox/deployment.md): Compose, systemd, Kubernetes, reverse proxy, release verification, and scaling
+- [Public tunnels](https://tools.yshubham.com/docs/sandbox/tunnels.md): exact-host routing, wildcard TLS, Cloudflare ingress, lifecycle, and cleanup
 - [Operations runbook](https://tools.yshubham.com/docs/sandbox/operations.md): health, common incidents, metrics, backups, upgrades, and capacity drills
 - [Development](https://tools.yshubham.com/docs/sandbox/development.md): Rust toolchain, tests, quality checks, and repository layout
 - [Roadmap](https://tools.yshubham.com/docs/sandbox/roadmap.md): explicit production gates and capabilities that are not implemented in v0.1

@@ -25,7 +25,9 @@ curl -fsSL https://tools.yshubham.com/sandbox/install.sh | sh
 sandbox --help
 ```
 
-The initial v0.1.0 registry release includes macOS ARM64 and Linux x86-64 archives. The Sandbox release workflow is ready to add macOS x86-64 and Linux ARM64 without changing the installer. Release binaries bundle `libpq` and vendored OpenSSL, avoiding machine-specific PostgreSQL client paths.
+The current v0.1.1 registry release includes macOS ARM64 and Linux x86-64 archives. The Sandbox release workflow is ready to add macOS x86-64 and Linux ARM64 without changing the installer. Release binaries bundle `libpq` and vendored OpenSSL, avoiding machine-specific PostgreSQL client paths.
+
+Both commands are safe to rerun. The installer verifies the requested archive and embedded binary versions, stages all three binaries in the destination filesystem, and atomically replaces each existing command instead of leaving an older installation untouched.
 
 Then connect the client to a self-hosted controller:
 
@@ -35,7 +37,7 @@ export SANDBOX_TOKEN='read-from-your-secret-store'
 sandbox doctor
 ```
 
-The setup script leaves existing `sandbox` entries unchanged. It also publishes verified templates for OpenCode, Cursor, VS Code/Copilot, Windsurf, Cline, Roo Code, Goose, Claude Desktop, Gemini Code Assist, and generic MCP hosts. Skip optional parts with:
+The setup script updates binaries in place while leaving existing `sandbox` MCP configuration entries unchanged. It also publishes verified templates for OpenCode, Cursor, VS Code/Copilot, Windsurf, Cline, Roo Code, Goose, Claude Desktop, Gemini Code Assist, and generic MCP hosts. Skip optional parts with:
 
 ```sh
 curl -fsSL https://tools.yshubham.com/sandbox/setup.sh | sh -s -- --no-skill
@@ -65,7 +67,7 @@ curl -fsSL https://tools.yshubham.com/skills
 
 ## Sandbox MCP
 
-`sandbox-mcp` is installed with the Sandbox binary bundle. It is a local stdio bridge with 10 lifecycle tools, three resources, and two prompts.
+`sandbox-mcp` is installed with the Sandbox binary bundle. It is a local stdio bridge with 12 lifecycle tools, three resources, and two prompts.
 
 ```sh
 codex mcp add sandbox -- sandbox-mcp
@@ -121,7 +123,7 @@ Example from a Sandbox source checkout:
 
 ```sh
 cargo build --profile dist --locked --package sandbox-cli --package sandboxd --package sandbox-mcp
-version=v0.1.0
+version=v0.1.1
 os=darwin
 arch=arm64
 archive="sandbox_${version}_${os}_${arch}.tar.gz"

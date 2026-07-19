@@ -17,7 +17,7 @@ case "$BASE_URL" in
   *) fail "SANDBOX_INSTALL_BASE_URL must use HTTPS" ;;
 esac
 
-for required_command in awk curl install mkdir mktemp rm tar tr uname; do
+for required_command in awk curl install mkdir mktemp mv rm rmdir tar tr uname; do
   command -v "$required_command" >/dev/null 2>&1 || fail "missing required command: $required_command"
 done
 if ! command -v sha256sum >/dev/null 2>&1 && ! command -v shasum >/dev/null 2>&1; then
@@ -64,9 +64,26 @@ esac
 archive="sandbox_${VERSION}_${os}_${arch}.tar.gz"
 url="$BASE_URL/sandbox/releases/$VERSION/$archive"
 temporary=$(mktemp -d "${TMPDIR:-/tmp}/sandbox-install.XXXXXX")
-trap 'rm -rf "$temporary"' EXIT INT TERM
+stage_dir=
+cleanup() {
+  rm -rf "$temporary"
+  [ -z "$stage_dir" ] || rm -rf "$stage_dir"
+}
+trap cleanup EXIT INT TERM
 
-printf '%s\n' "Installing Sandbox $VERSION for $os/$arch"
+installed_version=
+if [ -x "$INSTALL_DIR/sandbox" ]; then
+  installed_version=$("$INSTALL_DIR/sandbox" --version 2>/dev/null | awk 'NR == 1 { print $2; exit }' || true)
+fi
+if [ -n "$installed_version" ]; then
+  if [ "$installed_version" = "${VERSION#v}" ]; then
+    printf '%s\n' "Refreshing Sandbox $VERSION for $os/$arch"
+  else
+    printf '%s\n' "Updating Sandbox from $installed_version to $VERSION for $os/$arch"
+  fi
+else
+  printf '%s\n' "Installing Sandbox $VERSION for $os/$arch"
+fi
 curl --fail --location --proto '=https' --proto-redir '=https' --silent --show-error \
   --output "$temporary/$archive" -- "$url?v=$VERSION"
 curl --fail --location --proto '=https' --proto-redir '=https' --silent --show-error \
@@ -101,13 +118,21 @@ printf '%s\n' "$member_listing" | awk '
 
 tar -xzf "$temporary/$archive" -C "$temporary" sandbox sandboxd sandbox-mcp
 mkdir -p "$INSTALL_DIR"
+stage_dir=$(mktemp -d "$INSTALL_DIR/.sandbox-update.XXXXXX")
 for binary in sandbox sandboxd sandbox-mcp; do
   [ -f "$temporary/$binary" ] || fail "archive is missing $binary"
   [ ! -L "$temporary/$binary" ] || fail "archive contains a symbolic-link $binary"
-  install -m 0755 "$temporary/$binary" "$INSTALL_DIR/$binary"
+  binary_version=$("$temporary/$binary" --version 2>/dev/null | awk 'NR == 1 { print $2; exit }' || true)
+  [ "$binary_version" = "${VERSION#v}" ] || fail "$binary version $binary_version does not match $VERSION"
+  install -m 0755 "$temporary/$binary" "$stage_dir/$binary"
 done
+for binary in sandbox sandboxd sandbox-mcp; do
+  mv -f "$stage_dir/$binary" "$INSTALL_DIR/$binary"
+done
+rmdir "$stage_dir"
+stage_dir=
 
-printf '%s\n' "Installed sandbox, sandboxd, and sandbox-mcp $VERSION into $INSTALL_DIR"
+printf '%s\n' "Installed or updated sandbox, sandboxd, and sandbox-mcp $VERSION in $INSTALL_DIR"
 case ":${PATH:-}:" in
   *:"$INSTALL_DIR":*) ;;
   *) printf '%s\n' "Add $INSTALL_DIR to PATH before running sandbox." ;;

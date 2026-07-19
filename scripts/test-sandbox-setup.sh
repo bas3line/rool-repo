@@ -3,7 +3,7 @@
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-VERSION=v0.1.0
+VERSION=$(tr -d '\r\n' < "$ROOT/public/sandbox/latest")
 os=$(uname -s | tr '[:upper:]' '[:lower:]')
 arch=$(uname -m)
 case "$arch" in
