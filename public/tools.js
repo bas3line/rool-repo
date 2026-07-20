@@ -1,3 +1,28 @@
+const root = document.documentElement;
+const themeColor = document.querySelector('meta[name="theme-color"]');
+const themeToggles = [...document.querySelectorAll("[data-theme-toggle]")];
+
+const syncTheme = () => {
+  const isDark = root.dataset.theme === "dark";
+  themeColor?.setAttribute("content", isDark ? "#0a0a0a" : "#faf9f5");
+  themeToggles.forEach((toggle) => {
+    toggle.setAttribute("aria-label", `Switch to ${isDark ? "light" : "dark"} mode`);
+  });
+};
+
+themeToggles.forEach((toggle) => {
+  toggle.addEventListener("click", () => {
+    const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+    root.dataset.theme = nextTheme;
+    try {
+      localStorage.setItem("portfolio-theme-v3", nextTheme);
+    } catch {}
+    syncTheme();
+  });
+});
+
+syncTheme();
+
 document.querySelectorAll("[data-copy]").forEach((button) => {
   button.addEventListener("click", async () => {
     const value = button.dataset.copy;

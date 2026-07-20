@@ -1,18 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Watchman v0.8 documentation for GPU and AI inference operations, written for engineers and coding agents.">
-    <meta name="theme-color" content="#181818">
-    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#faf9f5">
+    <meta name="color-scheme" content="light dark">
     <link rel="alternate" type="text/markdown" href="/docs/watchman/reference.md" title="Watchman raw Markdown reference">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;550;650&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+    <link rel="icon" href="/shubham.jpg" type="image/jpeg">
     <title>Watchman docs — tools</title>
-    <link rel="stylesheet" href="/theme.css?v=20260719-1">
-    <link rel="stylesheet" href="/docs/docs.css?v=20260719-1">
+    <script>
+      try {
+        const theme = localStorage.getItem("portfolio-theme-v3") === "dark" ? "dark" : "light";
+        document.documentElement.dataset.theme = theme;
+        document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#0a0a0a" : "#faf9f5";
+      } catch {}
+    </script>
+    <link rel="stylesheet" href="/theme.css?v=20260720-1">
+    <link rel="stylesheet" href="/docs/docs.css?v=20260720-1">
   </head>
   <body>
     <header class="site-header">
@@ -25,6 +30,9 @@
         <div class="header-actions">
           <span class="status">v0.8.3 verified</span>
           <a class="raw-link" href="/docs/watchman/reference.md">raw .md</a>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" title="Switch theme">
+            <img src="/shubham.jpg" alt="" width="28" height="28">
+          </button>
         </div>
       </div>
     </header>
@@ -303,6 +311,6 @@ watchman capacity \
       </article>
     </main>
 
-    <script src="/docs/docs.js?v=20260719-1" defer></script>
+    <script src="/docs/docs.js?v=20260720-1" defer></script>
   </body>
 </html>
