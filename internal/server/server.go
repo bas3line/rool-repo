@@ -69,7 +69,14 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	filename := filepath.Join(s.root, filepath.FromSlash(strings.TrimPrefix(clean, "/")))
+	assetPath := strings.TrimPrefix(clean, "/")
+	// Keep the public stylesheet on a dedicated path. An earlier edge 404 for
+	// /tools.css was retained after a deploy even though the packaged asset was
+	// present; this alias avoids tying the landing page to that stale cache key.
+	if clean == "/registry.css" {
+		assetPath = "tools.css"
+	}
+	filename := filepath.Join(s.root, filepath.FromSlash(assetPath))
 	isRelease := strings.Contains(clean, "/releases/")
 	if isRelease {
 		// Do not let an edge cache retain a not-found response while a new

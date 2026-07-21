@@ -53,8 +53,8 @@ grep -F 'href="/docs/docs.css?v=20260720-1"' "$WATCHMAN_DOCS/index.html" >/dev/n
 grep -F 'src="/docs/docs.js?v=20260720-1"' "$WATCHMAN_DOCS/index.html" >/dev/null
 grep -F 'href="/docs/watchman/reference.md"' "$WATCHMAN_DOCS/index.html" >/dev/null
 
-grep -F 'href="/theme.css?v=20260720-1"' "$ROOT/public/index.html" >/dev/null
-grep -F 'href="/tools.css?v=20260720-1"' "$ROOT/public/index.html" >/dev/null
+grep -F 'href="/theme.css?v=20260721-2"' "$ROOT/public/index.html" >/dev/null
+grep -F 'href="/registry.css?v=20260721-4"' "$ROOT/public/index.html" >/dev/null
 grep -F 'src="/tools.js?v=20260721-1"' "$ROOT/public/index.html" >/dev/null
 grep -F 'Codex' "$ROOT/public/index.html" >/dev/null
 grep -F 'Claude Code' "$ROOT/public/index.html" >/dev/null

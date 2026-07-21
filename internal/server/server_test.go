@@ -175,6 +175,31 @@ func TestServesSharedFrontendAssetsWithoutCaching(t *testing.T) {
 	}
 }
 
+func TestServesRegistryStylesheetAlias(t *testing.T) {
+	root := t.TempDir()
+	const stylesheet = ".registry-page { color: inherit; }\n"
+	if err := os.WriteFile(filepath.Join(root, "tools.css"), []byte(stylesheet), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	server := New(root, filepath.Join(t.TempDir(), "install.sh"), slog.New(slog.NewTextHandler(io.Discard, nil)))
+	recorder := httptest.NewRecorder()
+	server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/registry.css", nil))
+
+	if recorder.Code != http.StatusOK {
+		t.Fatalf("status = %d", recorder.Code)
+	}
+	if got := recorder.Header().Get("Content-Type"); got != "text/css; charset=utf-8" {
+		t.Fatalf("content type = %q", got)
+	}
+	if got := recorder.Header().Get("Cache-Control"); got != "no-cache" {
+		t.Fatalf("cache control = %q", got)
+	}
+	if recorder.Body.String() != stylesheet {
+		t.Fatalf("body = %q", recorder.Body.String())
+	}
+}
+
 func TestServesPackagedInstallerWithSafeHeaders(t *testing.T) {
 	installer := filepath.Join(t.TempDir(), "install.sh")
 	if err := os.WriteFile(installer, []byte("#!/bin/sh\n"), 0o644); err != nil {
