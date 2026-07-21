@@ -2,13 +2,13 @@
 
 The source behind [tools.yshubham.com](https://tools.yshubham.com): a tiny Go file host for checksum-verified binaries, one-command workstation setup, MCP configuration, and cross-agent skills.
 
-Sandbox documentation is published for both humans and agents:
+The canonical documentation for Sandbox, Watchman, Objects, Trace, MCP, and the agent skills lives at:
 
 ```text
-https://tools.yshubham.com/docs/sandbox/
-https://tools.yshubham.com/docs/sandbox/index.md
-https://tools.yshubham.com/docs/sandbox/llms.txt
+https://docs.yshubham.com/
 ```
+
+The registry still ships raw Sandbox documentation assets at `/docs/sandbox/` for existing installation and crawler workflows, but new human-facing links should use the central docs host.
 
 ## Sandbox in one command
 
