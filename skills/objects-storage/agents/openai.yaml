@@ -1,0 +1,4 @@
+interface:
+  display_name: "Objects Storage"
+  short_description: "Share expiring public build artifacts safely"
+  default_prompt: "Use $objects-storage to share this build artifact safely and return its URL."

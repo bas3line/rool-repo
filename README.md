@@ -66,6 +66,14 @@ Install Watchman the same way:
 npx skills add bas3line/rool-repo --skill watchman --agent '*' --global --yes
 ```
 
+Install the Objects Storage workflow for temporary public build artifacts:
+
+```sh
+npx skills add bas3line/rool-repo --skill objects-storage --agent '*' --global --yes
+```
+
+The raw, hosted instructions are also available at [tools.yshubham.com/skills/objects-storage/SKILL.md](https://tools.yshubham.com/skills/objects-storage/SKILL.md).
+
 Inspect before installing:
 
 ```sh
@@ -104,6 +112,7 @@ public/
 skills/
   sandbox-platform/             # complete Sandbox agent skill
   watchman/                     # complete Watchman agent skill
+  objects-storage/              # temporary public artifact hand-off skill
 internal/server/                # hardened static HTTP behavior
 ```
 

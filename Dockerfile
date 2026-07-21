@@ -12,6 +12,7 @@ WORKDIR /app
 COPY --from=build /tools-host /usr/local/bin/tools-host
 COPY --chown=tools:tools install.sh ./install.sh
 COPY --chown=tools:tools public ./public
+COPY --chown=tools:tools skills ./skills
 USER tools
 ENV PORT=8080
 EXPOSE 8080

@@ -12,12 +12,18 @@ import (
 
 type Server struct {
 	root          string
+	skillsRoot    string
 	installerPath string
 	logger        *slog.Logger
 }
 
 func New(root, installerPath string, logger *slog.Logger) *Server {
-	return &Server{root: root, installerPath: installerPath, logger: logger}
+	return &Server{
+		root:          root,
+		skillsRoot:    filepath.Join(filepath.Dir(root), "skills"),
+		installerPath: installerPath,
+		logger:        logger,
+	}
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -55,6 +61,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	clean := path.Clean("/" + r.URL.Path)
+	if strings.HasPrefix(clean, "/skills/") {
+		s.serveSkillAsset(w, r, clean)
+		return
+	}
 	if clean == "/" || strings.HasSuffix(r.URL.Path, "/") {
 		http.NotFound(w, r)
 		return
@@ -107,6 +117,43 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.logger.Info("asset served", "method", r.Method, "path", clean, "bytes", info.Size())
+	http.ServeFile(w, r, filename)
+}
+
+func (s *Server) serveSkillAsset(w http.ResponseWriter, r *http.Request, clean string) {
+	if strings.HasSuffix(r.URL.Path, "/") {
+		http.NotFound(w, r)
+		return
+	}
+
+	relative := filepath.FromSlash(strings.TrimPrefix(clean, "/skills/"))
+	filename := filepath.Join(s.skillsRoot, relative)
+	root := filepath.Clean(s.skillsRoot)
+	if filename != root && !strings.HasPrefix(filepath.Clean(filename), root+string(os.PathSeparator)) {
+		http.NotFound(w, r)
+		return
+	}
+
+	info, err := os.Stat(filename)
+	if err != nil || !info.Mode().IsRegular() {
+		http.NotFound(w, r)
+		return
+	}
+
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	switch extension := strings.ToLower(filepath.Ext(filename)); extension {
+	case ".md":
+		w.Header().Set("Content-Type", "text/markdown; charset=utf-8")
+	case ".yaml", ".yml":
+		w.Header().Set("Content-Type", "application/yaml; charset=utf-8")
+	case ".json":
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	default:
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	}
+
+	s.logger.Info("skill asset served", "method", r.Method, "path", clean, "bytes", info.Size())
 	http.ServeFile(w, r, filename)
 }
 

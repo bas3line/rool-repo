@@ -218,6 +218,77 @@ func TestServesPlainTextSkillsInstructions(t *testing.T) {
 	}
 }
 
+func TestServesInstallableSkillAssets(t *testing.T) {
+	base := t.TempDir()
+	root := filepath.Join(base, "public")
+	if err := os.MkdirAll(root, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	skillDir := filepath.Join(base, "skills", "objects-storage", "agents")
+	if err := os.MkdirAll(skillDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	files := map[string]struct {
+		body        string
+		contentType string
+	}{
+		filepath.Join(base, "skills", "objects-storage", "SKILL.md"): {
+			body:        "---\nname: objects-storage\n---\n",
+			contentType: "text/markdown; charset=utf-8",
+		},
+		filepath.Join(skillDir, "openai.yaml"): {
+			body:        "interface:\n  display_name: Objects Storage\n",
+			contentType: "application/yaml; charset=utf-8",
+		},
+	}
+	for filename, file := range files {
+		if err := os.WriteFile(filename, []byte(file.body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	server := New(root, filepath.Join(t.TempDir(), "install.sh"), slog.New(slog.NewTextHandler(io.Discard, nil)))
+	for route, expected := range map[string]struct {
+		body        string
+		contentType string
+	}{
+		"/skills/objects-storage/SKILL.md": {
+			body:        files[filepath.Join(base, "skills", "objects-storage", "SKILL.md")].body,
+			contentType: files[filepath.Join(base, "skills", "objects-storage", "SKILL.md")].contentType,
+		},
+		"/skills/objects-storage/agents/openai.yaml": {
+			body:        files[filepath.Join(skillDir, "openai.yaml")].body,
+			contentType: files[filepath.Join(skillDir, "openai.yaml")].contentType,
+		},
+	} {
+		recorder := httptest.NewRecorder()
+		server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, route, nil))
+		if recorder.Code != http.StatusOK {
+			t.Fatalf("route %q status = %d", route, recorder.Code)
+		}
+		if got := recorder.Header().Get("Content-Type"); got != expected.contentType {
+			t.Fatalf("route %q content type = %q", route, got)
+		}
+		if got := recorder.Header().Get("Cache-Control"); got != "no-cache" {
+			t.Fatalf("route %q cache control = %q", route, got)
+		}
+		if got := recorder.Header().Get("X-Content-Type-Options"); got != "nosniff" {
+			t.Fatalf("route %q x-content-type-options = %q", route, got)
+		}
+		if got := recorder.Body.String(); got != expected.body {
+			t.Fatalf("route %q body = %q", route, got)
+		}
+	}
+
+	for _, route := range []string{"/skills/objects-storage/", "/skills/objects-storage/../SKILL.md"} {
+		recorder := httptest.NewRecorder()
+		server.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, route, nil))
+		if recorder.Code != http.StatusNotFound {
+			t.Fatalf("route %q status = %d", route, recorder.Code)
+		}
+	}
+}
+
 func TestServesSetupScriptsWithoutCaching(t *testing.T) {
 	root := t.TempDir()
 	if err := os.MkdirAll(filepath.Join(root, "sandbox"), 0o755); err != nil {
