@@ -66,11 +66,14 @@ Install Watchman the same way:
 npx skills add bas3line/rool-repo --skill watchman --agent '*' --global --yes
 ```
 
-Install the Objects Storage workflow for temporary public build artifacts:
+Install the Objects Storage workflow for every supported agent in the current project:
 
 ```sh
-npx skills add bas3line/rool-repo --skill objects-storage --agent '*' --global --yes
+npx skills add bas3line/rool-repo --skill objects-storage --agent '*' --yes
 ```
+
+Eve and PromptScript support project skills only. For a global Codex install,
+target Codex explicitly with `--agent codex --global`.
 
 The raw, hosted instructions are also available at [tools.yshubham.com/skills/objects-storage/SKILL.md](https://tools.yshubham.com/skills/objects-storage/SKILL.md).
 

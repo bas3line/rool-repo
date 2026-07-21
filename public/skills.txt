@@ -42,9 +42,14 @@ The hosted CLI and complete agent skill both target Rust Watchman v0.8.3.
 
 OBJECTS STORAGE
 
-Install the Objects Storage skill globally into every supported agent:
+Install the Objects Storage skill for every supported agent in the current project:
 
-  npx skills add bas3line/rool-repo --skill objects-storage --agent '*' --global --yes
+  npx skills add bas3line/rool-repo --skill objects-storage --agent '*' --yes
+
+Eve and PromptScript support project skills only. For a global Codex install,
+target Codex explicitly:
+
+  npx skills add bas3line/rool-repo --skill objects-storage --agent codex --global --yes
 
 Inspect all skills before installing:
 
