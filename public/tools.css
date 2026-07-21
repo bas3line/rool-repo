@@ -180,6 +180,10 @@
   scroll-margin-top: 2rem;
 }
 
+.entry--forge {
+  border-top: 2px solid var(--link);
+}
+
 .entry-header,
 .agent-heading {
   display: flex;
@@ -368,6 +372,12 @@
   padding-top: 1rem;
   color: var(--muted);
   font-size: 0.82rem;
+}
+
+.footer-links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
 }
 
 @media (min-width: 860px) {

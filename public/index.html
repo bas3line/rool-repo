@@ -33,6 +33,7 @@
             <li><a href="https://yshubham.com/work/">Work</a></li>
             <li><a href="https://yshubham.com/blog/">Writing</a></li>
             <li><a href="/" aria-current="page">Tools</a></li>
+            <li><a href="https://git.yshubham.com/">Git</a></li>
             <li><a href="https://yshubham.com/manga/">Bookshelf</a></li>
             <li><a href="https://yshubham.com/uses/">Uses</a></li>
             <li><a href="https://yshubham.com/hire-me/">Hire me</a></li>
@@ -60,6 +61,7 @@
             <nav aria-label="Registry sections">
               <ul class="jump-links">
                 <li><a href="#tools">tools</a></li>
+                <li><a href="#git">git forge</a></li>
                 <li><a href="#agents">use with agents</a></li>
                 <li><a href="#endpoints">endpoints</a></li>
               </ul>
@@ -73,6 +75,29 @@
             </div>
 
             <div class="entry-list">
+              <article class="entry entry--forge" id="git">
+                <div class="entry-header">
+                  <h3>Git Forge</h3>
+                  <span class="entry-meta">Forgejo · public mirrors · syncs every 2m</span>
+                </div>
+                <p class="entry-summary">The public source home for the systems behind this registry: Sandbox, Watchman, and UltraBalancer.</p>
+                <p class="entry-description">A read-only Forgejo mirror kept in sync with GitHub and served through Cloudflare, so the source stays close without putting the origin on display.</p>
+                <div class="capability-lines" aria-label="Git Forge details">
+                  <p><code>browse</code><span><a href="https://git.yshubham.com/explore/repos">git.yshubham.com/explore/repos</a></span></p>
+                  <p><code>clone</code><span><code>git clone https://git.yshubham.com/bas3line/sandbox.git</code></span></p>
+                  <p><code>mirrors</code><span>Sandbox · Watchman · UltraBalancer · GitHub source retained</span></p>
+                </div>
+                <div class="command-wrap">
+                  <div class="command-label">clone from the forge</div>
+                  <pre><code>git clone https://git.yshubham.com/bas3line/sandbox.git</code></pre>
+                  <button class="copy-button" type="button" data-copy="git clone https://git.yshubham.com/bas3line/sandbox.git" aria-label="Copy Git Forge clone command">copy</button>
+                </div>
+                <p class="entry-links">
+                  <a href="https://git.yshubham.com/explore/repos">browse repositories</a>
+                  <a href="https://github.com/bas3line" target="_blank" rel="noreferrer">GitHub source</a>
+                </p>
+              </article>
+
               <article class="entry" id="sandbox">
                 <div class="entry-header">
                   <h3>Sandbox</h3>
@@ -214,6 +239,7 @@
               <li><code>/sandbox/latest</code><span>current immutable Sandbox release pointer</span></li>
               <li><code>/docs/watchman/</code><span>human and agent-ready Watchman documentation</span></li>
               <li><code>/watchman/install.sh</code><span>checksum-verifying Watchman installer</span></li>
+              <li><code>git.yshubham.com</code><span>Forgejo mirrors for Sandbox, Watchman, and UltraBalancer</span></li>
               <li><code>/skills</code><span>plain-text agent installation instructions</span></li>
               <li><code>/healthz</code><span>registry liveness probe</span></li>
             </ul>
@@ -221,12 +247,12 @@
 
           <footer class="footer">
             <span>Built for engineers who give agents shell access.</span>
-            <a href="https://yshubham.com" target="_blank" rel="noreferrer">yshubham.com ↗</a>
+            <span class="footer-links"><a href="https://git.yshubham.com/">git.yshubham.com ↗</a><a href="https://yshubham.com" target="_blank" rel="noreferrer">yshubham.com ↗</a></span>
           </footer>
         </article>
       </div>
     </main>
 
-    <script src="/tools.js?v=20260720-1" defer></script>
+    <script src="/tools.js?v=20260721-1" defer></script>
   </body>
 </html>
