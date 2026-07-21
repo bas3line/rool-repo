@@ -4,7 +4,7 @@ const themeToggles = [...document.querySelectorAll("[data-theme-toggle]")];
 
 const syncTheme = () => {
   const isDark = root.dataset.theme === "dark";
-  themeColor?.setAttribute("content", isDark ? "#0a0a0a" : "#faf9f5");
+  themeColor?.setAttribute("content", isDark ? "#111111" : "#fafafa");
   themeToggles.forEach((toggle) => {
     toggle.setAttribute("aria-label", `Switch to ${isDark ? "light" : "dark"} mode`);
   });
